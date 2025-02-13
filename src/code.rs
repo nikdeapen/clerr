@@ -99,13 +99,13 @@ mod tests {
     #[test]
     #[ignore]
     fn display() {
-        let code: Code = Code::new("CODE", Error, "error message");
+        let code: Code = Code::new("ERROR", Error, "error message");
         println!("{}", code);
 
-        let code: Code = Code::new("CODE", Warning, "warning message");
+        let code: Code = Code::new("WARNING", Warning, "warning message");
         println!("{}", code);
 
-        let code: Code = Code::new("CODE", Info, "info message");
+        let code: Code = Code::new("INFO", Info, "info message");
         println!("{}", code);
     }
 }

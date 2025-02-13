@@ -2,31 +2,32 @@ use colored::{ColoredString, Colorize};
 
 use crate::Severity;
 
-/// Info concerning a single token of a file.
+/// Info concerning a single token of a text file.
 ///
 /// # Display
 ///  --> the/file/name.ext
 ///   |
 /// 8 | the line text
-///   |     ^^^^ the error message
+///   |     ^^^^ the message
+///   |
 #[derive(Copy, Clone, Debug)]
 pub struct TokenInfo<'a> {
     /// The file name.
     pub file_name: &'a str,
 
-    /// The 1-indexed file line number of the token.
+    /// The 1-indexed line number of the token within the file.
     pub line: usize,
 
-    /// The 0-indexed position of the first byte of the token within the line.
+    /// The 0-indexed char position of the first char of the token within the line.
     pub position: usize,
 
-    /// The token length.
+    /// The token length. (in chars)
     pub len: usize,
 
-    /// The file line text.
+    /// The line text.
     pub line_text: &'a str,
 
-    /// The error message.
+    /// The message.
     pub message: &'a str,
 
     /// The severity.
@@ -57,7 +58,11 @@ impl<'a> TokenInfo<'a> {
 
     /// Gets the file and token string.
     fn file_and_token(&self) -> ColoredString {
-        format!(" {}[{}:{}]", self.file_name, self.line, self.position).normal()
+        format!(
+            " {} [line={}, position={}]",
+            self.file_name, self.line, self.position
+        )
+        .normal()
     }
 }
 
@@ -101,7 +106,7 @@ mod tests {
     use crate::{Code, Report};
 
     #[test]
-    #[ignore]
+    // #[ignore]
     fn display() {
         let info: TokenInfo = TokenInfo {
             file_name: "/the/file/name.ext",
@@ -109,7 +114,7 @@ mod tests {
             position: 7,
             len: 5,
             line_text: "Hello, World!",
-            message: "this is `World`",
+            message: "this is 'World'",
             severity: Warning,
         };
         let report: Report =
