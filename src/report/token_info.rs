@@ -5,6 +5,13 @@ impl Report {
     //! Token Info
 
     /// Generates the token info entry.
+    ///
+    /// # Display
+    ///  --> the/file/name.ext
+    ///   |
+    /// 8 | the line text
+    ///   |     ^^^^ the message
+    ///   |
     pub fn token_info(
         file_name: &str,
         line: usize,
@@ -46,12 +53,7 @@ impl Report {
 
     /// Adds the token info entry.
     ///
-    /// # Display
-    ///  --> the/file/name.ext
-    ///   |
-    /// 8 | the line text
-    ///   |     ^^^^ the message
-    ///   |
+    /// See `token_info`.
     pub fn add_token_info(
         &mut self,
         file_name: &str,
@@ -69,7 +71,7 @@ impl Report {
 
     /// Adds the token info entry.
     ///
-    /// See `add_token_info`.
+    /// See `token_info`.
     pub fn with_token_info(
         mut self,
         file_name: &str,
@@ -90,7 +92,7 @@ impl Report {
 impl Report {
     //! Token Info Utils
 
-    fn char_count(c: char, count: usize) -> String {
+    pub(in crate::report) fn char_count(c: char, count: usize) -> String {
         let mut s: String = String::with_capacity(c.len_utf8() * count);
         for _ in 0..count {
             s.push(c);
