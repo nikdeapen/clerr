@@ -25,8 +25,8 @@ impl Severity {
 impl Severity {
     //! Display
 
-    /// Converts the severity to a static string.
-    pub fn to_str(&self) -> &'static str {
+    /// Gets the label.
+    pub fn label(&self) -> &'static str {
         match self {
             Self::Error => "error",
             Self::Warning => "warning",
@@ -37,6 +37,6 @@ impl Severity {
 
 impl Display for Severity {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.to_str())
+        write!(f, "{}", self.label())
     }
 }

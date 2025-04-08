@@ -4,6 +4,46 @@ use colored::{ColoredString, Colorize};
 impl Report {
     //! Token Info
 
+    /// Generates the token info entry.
+    pub fn token_info(
+        file_name: &str,
+        line: usize,
+        position: usize,
+        line_text: &str,
+        token_len: usize,
+        severity: Severity,
+        message: &str,
+    ) -> Vec<ColoredString> {
+        let line_number: String = line.to_string();
+        vec![
+            // 1 - file name
+            Self::char_count(' ', line_number.len()).normal(),
+            Self::arrow(),
+            Self::file_and_token(file_name, line, position),
+            "\n".normal(),
+            // 2 - empty
+            Self::char_count(' ', line_number.len()).normal(),
+            Self::vertical(),
+            "\n".normal(),
+            // 3 - line text
+            line_number.bright_blue(),
+            Self::vertical(),
+            line_text.normal(),
+            "\n".normal(),
+            // 4 - error message
+            Self::char_count(' ', line_number.len()).normal(),
+            Self::vertical(),
+            Self::char_count(' ', position).normal(),
+            Self::char_count('^', token_len).color(severity.color()),
+            " --- ".color(severity.color()),
+            message.color(severity.color()),
+            "\n".normal(),
+            // 5 - empty
+            Self::char_count(' ', line_number.len()).normal(),
+            Self::vertical(),
+        ]
+    }
+
     /// Adds the token info entry.
     ///
     /// # Display
@@ -44,46 +84,6 @@ impl Report {
             file_name, line, position, line_text, token_len, severity, message,
         );
         self
-    }
-
-    /// Generates the token info entry.
-    pub fn token_info(
-        file_name: &str,
-        line: usize,
-        position: usize,
-        line_text: &str,
-        token_len: usize,
-        severity: Severity,
-        message: &str,
-    ) -> Vec<ColoredString> {
-        let line_number: String = line.to_string();
-        vec![
-            // 1 - file name
-            Self::char_count(' ', line_number.len()).normal(),
-            Self::arrow(),
-            Self::file_and_token(file_name, line, position),
-            "\n".normal(),
-            // 2 - empty
-            Self::char_count(' ', line_number.len()).normal(),
-            Self::vertical(),
-            "\n".normal(),
-            // 3 - line text
-            line_number.bright_blue(),
-            Self::vertical(),
-            line_text.normal(),
-            "\n".normal(),
-            // 4 - error message
-            Self::char_count(' ', line_number.len()).normal(),
-            Self::vertical(),
-            Self::char_count(' ', position).normal(),
-            Self::char_count('^', token_len).color(severity.color()),
-            " --- ".color(severity.color()),
-            message.color(severity.color()),
-            "\n".normal(),
-            // 5 - empty
-            Self::char_count(' ', line_number.len()).normal(),
-            Self::vertical(),
-        ]
     }
 }
 

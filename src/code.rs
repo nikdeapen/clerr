@@ -81,7 +81,7 @@ impl Code {
 
 impl Display for Code {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.severity.to_str().color(self.severity.color()))?;
+        write!(f, "{}", self.severity.label().color(self.severity.color()))?;
         write!(f, "{}", "[".color(self.severity.color()))?;
         write!(f, "{}", self.code.color(self.severity.color()))?;
         write!(f, "{}", "]: ".color(self.severity.color()))?;
