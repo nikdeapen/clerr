@@ -112,4 +112,3 @@ impl Report {
         format!(" {} [line={}, position={}]", file_name, line, position).normal()
     }
 }
-
