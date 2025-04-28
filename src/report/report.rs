@@ -3,6 +3,10 @@ use colored::ColoredString;
 use std::fmt::{Display, Formatter};
 
 /// A command-line report.
+///
+/// # Display
+/// severity[code]: message
+/// entries
 #[derive(Clone, Debug)]
 pub struct Report {
     code: Code,
@@ -47,7 +51,7 @@ impl Display for Report {
         write!(f, "{}\n", self.code)?;
         for entry in &self.entries {
             for string in entry {
-                write!(f, "{}", string)?;
+                write!(f, "{}\n", string)?;
             }
         }
         Ok(())

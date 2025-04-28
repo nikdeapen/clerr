@@ -53,7 +53,7 @@ impl Report {
 
     /// Adds the token info entry.
     ///
-    /// See `token_info`.
+    /// See `Report::token_info`.
     pub fn add_token_info(
         &mut self,
         file_name: &str,
@@ -71,7 +71,7 @@ impl Report {
 
     /// Adds the token info entry.
     ///
-    /// See `token_info`.
+    /// See `Report::token_info`.
     pub fn with_token_info(
         mut self,
         file_name: &str,
@@ -92,6 +92,7 @@ impl Report {
 impl Report {
     //! Token Info Utils
 
+    /// Generates `c` `count` times.
     pub(in crate::report) fn char_count(c: char, count: usize) -> String {
         let mut s: String = String::with_capacity(c.len_utf8() * count);
         for _ in 0..count {

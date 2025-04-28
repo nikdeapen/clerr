@@ -9,8 +9,8 @@ use std::fmt::{Display, Formatter};
 /// severity[code]: message
 #[derive(Clone, Debug)]
 pub struct Code {
-    code: String,
     severity: Severity,
+    code: String,
     message: String,
 }
 
@@ -18,7 +18,7 @@ impl Code {
     //! Construction
 
     /// Creates a new code.
-    pub fn new<S0, S1>(code: S0, severity: Severity, message: S1) -> Self
+    pub fn new<S0, S1>(severity: Severity, code: S0, message: S1) -> Self
     where
         S0: Into<String>,
         S1: Into<String>,
@@ -26,51 +26,51 @@ impl Code {
         let code: String = code.into();
         let message: String = message.into();
         Self {
-            code,
             severity,
+            code,
             message,
         }
     }
 
     /// Creates a new error code.
-    pub fn error<S0, S1>(error_code: S0, message: S1) -> Self
+    pub fn error<S0, S1>(code: S0, message: S1) -> Self
     where
         S0: Into<String>,
         S1: Into<String>,
     {
-        Self::new(error_code, Error, message)
+        Self::new(Error, code, message)
     }
 
     /// Creates a new warning code.
-    pub fn warning<S0, S1>(error_code: S0, message: S1) -> Self
+    pub fn warning<S0, S1>(code: S0, message: S1) -> Self
     where
         S0: Into<String>,
         S1: Into<String>,
     {
-        Self::new(error_code, Warning, message)
+        Self::new(Warning, code, message)
     }
 
     /// Creates a new info code.
-    pub fn info<S0, S1>(error_code: S0, message: S1) -> Self
+    pub fn info<S0, S1>(code: S0, message: S1) -> Self
     where
         S0: Into<String>,
         S1: Into<String>,
     {
-        Self::new(error_code, Info, message)
+        Self::new(Info, code, message)
     }
 }
 
 impl Code {
     //! Properties
 
-    /// Gets the code.
-    pub fn code(&self) -> &str {
-        self.code.as_str()
-    }
-
     /// Gets the severity.
     pub fn severity(&self) -> Severity {
         self.severity
+    }
+
+    /// Gets the code.
+    pub fn code(&self) -> &str {
+        self.code.as_str()
     }
 
     /// Gets the message.
