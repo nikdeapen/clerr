@@ -51,8 +51,9 @@ impl Display for Report {
         write!(f, "{}\n", self.code)?;
         for entry in &self.entries {
             for string in entry {
-                write!(f, "{}\n", string)?;
+                write!(f, "{}", string)?;
             }
+            write!(f, "\n")?;
         }
         Ok(())
     }

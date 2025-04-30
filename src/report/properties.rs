@@ -37,3 +37,23 @@ impl Report {
         self
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::Report;
+    use colored::ColoredString;
+
+    #[test]
+    #[ignore]
+    fn properties() {
+        let info: Vec<ColoredString> = Report::properties(vec![
+            ("one".to_string(), "two".to_string()),
+            ("three".to_string(), "four".to_string()),
+            ("five".to_string(), "six".to_string()),
+        ]);
+
+        for s in info {
+            print!("{}", s);
+        }
+    }
+}

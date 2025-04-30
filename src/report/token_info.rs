@@ -113,3 +113,28 @@ impl Report {
         format!(" {} [line={}, position={}]", file_name, line, position).normal()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::Report;
+    use crate::Severity::Warning;
+    use colored::ColoredString;
+
+    #[test]
+    #[ignore]
+    fn token_info() {
+        let info: Vec<ColoredString> = Report::token_info(
+            "the/file/name.ext",
+            12,
+            4,
+            "the line text",
+            4,
+            Warning,
+            "the 'line' token",
+        );
+
+        for s in info {
+            print!("{}", s);
+        }
+    }
+}
