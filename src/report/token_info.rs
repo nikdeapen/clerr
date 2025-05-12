@@ -54,6 +54,7 @@ impl Report {
     /// Adds the token info entry.
     ///
     /// See `Report::token_info`.
+    #[allow(clippy::too_many_arguments)]
     pub fn add_token_info(
         &mut self,
         file_name: &str,
@@ -72,6 +73,7 @@ impl Report {
     /// Adds the token info entry.
     ///
     /// See `Report::token_info`.
+    #[allow(clippy::too_many_arguments)]
     pub fn with_token_info(
         mut self,
         file_name: &str,

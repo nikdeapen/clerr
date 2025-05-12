@@ -48,12 +48,12 @@ impl Report {
 
 impl Display for Report {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}\n", self.code)?;
+        writeln!(f, "{}", self.code)?;
         for entry in &self.entries {
             for string in entry {
                 write!(f, "{}", string)?;
             }
-            write!(f, "\n")?;
+            writeln!(f)?;
         }
         Ok(())
     }
