@@ -51,7 +51,7 @@ impl Display for Report {
         writeln!(f, "{}", self.code)?;
         for entry in &self.entries {
             for string in entry {
-                write!(f, "{}", string)?;
+                write!(f, "{string}")?;
             }
             writeln!(f)?;
         }
