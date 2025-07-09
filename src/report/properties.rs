@@ -53,7 +53,7 @@ mod tests {
         ]);
 
         for s in info {
-            print!("{}", s);
+            print!("{s}");
         }
     }
 }
