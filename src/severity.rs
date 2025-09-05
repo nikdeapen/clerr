@@ -1,4 +1,4 @@
-use colored::Color;
+use colored::{Color, Colorize};
 use std::fmt::{Display, Formatter};
 
 /// A report severity.
@@ -37,6 +37,6 @@ impl Severity {
 
 impl Display for Severity {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.label())
+        write!(f, "{}", self.label().color(self.color()))
     }
 }
