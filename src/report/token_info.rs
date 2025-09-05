@@ -112,6 +112,7 @@ impl Report {
     }
 
     fn file_and_token(file_name: &str, line: usize, position: usize) -> ColoredString {
+        let position: usize = position + 1;
         format!(" {file_name} [line={line}, position={position}]").normal()
     }
 }
@@ -138,5 +139,6 @@ mod tests {
         for s in info {
             print!("{s}");
         }
+        println!();
     }
 }

@@ -3,7 +3,7 @@ use crate::Severity::{Error, Info, Warning};
 use colored::Colorize;
 use std::fmt::{Display, Formatter};
 
-/// An error code with an associated severity and message.
+/// A report code with an associated severity and message.
 ///
 /// # Display
 /// severity[code]: message
@@ -81,7 +81,7 @@ impl Code {
 
 impl Display for Code {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.severity.label().color(self.severity.color()))?;
+        write!(f, "{}", self.severity)?;
         write!(f, "{}", "[".color(self.severity.color()))?;
         write!(f, "{}", self.code.color(self.severity.color()))?;
         write!(f, "{}", "]: ".color(self.severity.color()))?;
