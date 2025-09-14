@@ -1,7 +1,7 @@
 use colored::{Color, Colorize};
 use std::fmt::{Display, Formatter};
 
-/// A report severity.
+/// The severity of a command-line report.
 #[derive(Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug)]
 pub enum Severity {
     Error,
@@ -12,7 +12,7 @@ pub enum Severity {
 impl Severity {
     //! Color
 
-    /// Gets the color.
+    /// Gets the associated color.
     pub fn color(&self) -> Color {
         match self {
             Self::Error => Color::BrightRed,
@@ -25,7 +25,7 @@ impl Severity {
 impl Severity {
     //! Display
 
-    /// Gets the label.
+    /// Gets the label string.
     pub fn label(&self) -> &'static str {
         match self {
             Self::Error => "error",
