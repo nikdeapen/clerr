@@ -3,10 +3,13 @@ use crate::Severity::{Error, Info, Warning};
 use colored::Colorize;
 use std::fmt::{Display, Formatter};
 
-/// A report code with an associated severity and message.
+/// A command-line report code with an associated severity and message.
 ///
 /// # Display
+///
+/// ```text
 /// severity[code]: message
+/// ```
 #[derive(Clone, Debug)]
 pub struct Code {
     severity: Severity,
@@ -17,19 +20,26 @@ pub struct Code {
 impl Code {
     //! Construction
 
-    /// Creates a new code.
-    pub fn new<S0, S1>(severity: Severity, code: S0, message: S1) -> Self
-    where
-        S0: Into<String>,
-        S1: Into<String>,
-    {
-        let code: String = code.into();
-        let message: String = message.into();
+    /// Creates a new command-line report code.
+    pub fn new(severity: Severity, code: String, message: String) -> Self {
         Self {
             severity,
             code,
             message,
         }
+    }
+
+    /// Creates a new command-line report code.
+    pub fn from<S, S0, S1>(severity: S, code: S0, message: S1) -> Self
+    where
+        S: Into<Severity>,
+        S0: Into<String>,
+        S1: Into<String>,
+    {
+        let severity: Severity = severity.into();
+        let code: String = code.into();
+        let message: String = message.into();
+        Self::new(severity, code, message)
     }
 
     /// Creates a new error code.
@@ -38,7 +48,7 @@ impl Code {
         S0: Into<String>,
         S1: Into<String>,
     {
-        Self::new(Error, code, message)
+        Self::from(Error, code, message)
     }
 
     /// Creates a new warning code.
@@ -47,7 +57,7 @@ impl Code {
         S0: Into<String>,
         S1: Into<String>,
     {
-        Self::new(Warning, code, message)
+        Self::from(Warning, code, message)
     }
 
     /// Creates a new info code.
@@ -56,7 +66,7 @@ impl Code {
         S0: Into<String>,
         S1: Into<String>,
     {
-        Self::new(Info, code, message)
+        Self::from(Info, code, message)
     }
 }
 
@@ -81,10 +91,14 @@ impl Code {
 
 impl Display for Code {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.severity)?;
-        write!(f, "{}", "[".color(self.severity.color()))?;
-        write!(f, "{}", self.code.color(self.severity.color()))?;
-        write!(f, "{}", "]: ".color(self.severity.color()))?;
-        write!(f, "{}", self.message.bright_white().bold())
+        write!(
+            f,
+            "{}{}{}{}{}",
+            self.severity,
+            "[".color(self.severity.color()),
+            self.code.color(self.severity.color()),
+            "]: ".color(self.severity.color()),
+            self.message.bright_white().bold()
+        )
     }
 }

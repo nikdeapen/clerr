@@ -7,16 +7,20 @@ impl Report {
     /// Generates the `properties` entry.
     ///
     /// # Display
-    /// first:   value
-    /// second:  another value
-    /// third:   third value
+    ///
+    /// ```text
+    ///     first:  value
+    ///     second: another value
+    ///     third:  third value
+    /// ```
     pub fn properties(mut properties: Vec<(String, String)>) -> Vec<ColoredString> {
-        let max_property_len: usize = properties.iter().map(|(p, _)| p.len()).max().unwrap_or(0);
-        let mut entry: Vec<ColoredString> = Vec::with_capacity(properties.len() * 5);
+        let max_len: usize = properties.iter().map(|(p, _)| p.len()).max().unwrap_or(0);
+        let mut entry: Vec<ColoredString> = Vec::with_capacity(properties.len() * 6);
         for (property, value) in properties.drain(..) {
-            let property_len: usize = property.len();
-            let spaces: usize = max_property_len - property_len + 2;
+            let len: usize = property.len();
+            let spaces: usize = max_len - len + 2;
 
+            entry.push("    ".normal());
             entry.push(property.color(Severity::Info.color()));
             entry.push(":".color(Severity::Info.color()));
             entry.push(Self::char_count(' ', spaces).normal());
@@ -27,11 +31,15 @@ impl Report {
     }
 
     /// Adds the `properties` entry.
+    ///
+    /// See `Report::properties`.
     pub fn add_properties(&mut self, properties: Vec<(String, String)>) {
         self.add_entry(Self::properties(properties));
     }
 
     /// Adds the `properties` entry.
+    ///
+    /// See `Report::properties`.
     pub fn with_properties(mut self, properties: Vec<(String, String)>) -> Self {
         self.add_properties(properties);
         self

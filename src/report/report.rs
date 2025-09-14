@@ -5,8 +5,11 @@ use std::fmt::{Display, Formatter};
 /// A command-line report.
 ///
 /// # Display
+///
+/// ```text
 /// severity[code]: message
 /// entries
+/// ```
 #[derive(Clone, Debug)]
 pub struct Report {
     code: Code,
@@ -16,7 +19,7 @@ pub struct Report {
 impl Report {
     //! Construction
 
-    /// Creates a new report.
+    /// Creates a new command-line report.
     pub fn new(code: Code) -> Self {
         Self {
             code,

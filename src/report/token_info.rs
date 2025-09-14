@@ -6,12 +6,20 @@ impl Report {
 
     /// Generates the token info entry.
     ///
+    /// # Note
+    /// The `line` is the 1-indexed line number.
+    /// The `position` is the 0-indexed line position of the first byte within the `line_text`.
+    /// The `token_len` is the number of chars or slots on a monospaced display.
+    ///
     /// # Display
+    ///
+    /// ```text
     ///  --> the/file/name.ext
     ///   |
     /// 8 | the line text
     ///   |     ^^^^ the message
     ///   |
+    /// ```
     pub fn token_info(
         file_name: &str,
         line: usize,
