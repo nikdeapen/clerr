@@ -6,4 +6,4 @@ This library aids in command-line error reporting.
 
 There are currently no optional features.
 
-    clerr = "0.5.0"
+    clerr = "0.6.0"
