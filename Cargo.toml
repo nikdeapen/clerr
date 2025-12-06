@@ -8,3 +8,6 @@ homepage = "https://github.com/nikdeapen/clerr"
 authors = ["Nik Deapen <nik@deapen.com>"]
 edition = "2021"
 license = "MIT"
+
+[dependencies]
+colored = "3.0.0"
