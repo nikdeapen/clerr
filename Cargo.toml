@@ -1,6 +1,6 @@
 [package]
 name = "clerr"
-version = "0.8.0"
+version = "0.8.0-rc.2"
 description = "This library aids in command-line error reporting."
 readme = "README.md"
 repository = "https://github.com/nikdeapen/clerr"
