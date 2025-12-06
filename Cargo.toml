@@ -1,0 +1,10 @@
+[package]
+name = "clerr"
+version = "0.8.0"
+description = "This library aids in command-line error reporting."
+readme = "README.md"
+repository = "https://github.com/nikdeapen/clerr"
+homepage = "https://github.com/nikdeapen/clerr"
+authors = ["Nik Deapen <nik@deapen.com>"]
+edition = "2021"
+license = "MIT"
