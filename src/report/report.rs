@@ -38,22 +38,28 @@ impl Report {
     //! Entries
 
     /// Adds the `entry`.
-    pub fn add_entry<E>(&mut self, entry: E)
-    where
-        E: Into<Vec<ColoredString>>,
-    {
-        self.entries.push(entry.into());
+    pub fn add_entry(&mut self, entry: impl super::ReportEntry) {
+        self.entries.push(entry.entry());
     }
 
     /// Adds the `entry`.
-    pub fn with_entry<E>(mut self, entry: E) -> Self
-    where
-        E: Into<Vec<ColoredString>>,
-    {
+    #[must_use]
+    pub fn with_entry(mut self, entry: impl super::ReportEntry) -> Self {
         self.add_entry(entry);
         self
     }
 }
+
+impl Report {
+    //! Printing
+
+    /// Prints the report to stderr.
+    pub fn eprint(&self) {
+        eprintln!("{self}");
+    }
+}
+
+impl std::error::Error for Report {}
 
 impl Display for Report {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {

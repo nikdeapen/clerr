@@ -29,26 +29,13 @@ impl Code {
         }
     }
 
-    /// Creates a new command-line report code.
-    pub fn from<S, S0, S1>(severity: S, code: S0, message: S1) -> Self
-    where
-        S: Into<Severity>,
-        S0: Into<String>,
-        S1: Into<String>,
-    {
-        let severity: Severity = severity.into();
-        let code: String = code.into();
-        let message: String = message.into();
-        Self::new(severity, code, message)
-    }
-
     /// Creates a new error code.
     pub fn error<S0, S1>(code: S0, message: S1) -> Self
     where
         S0: Into<String>,
         S1: Into<String>,
     {
-        Self::from(Error, code, message)
+        Self::new(Error, code.into(), message.into())
     }
 
     /// Creates a new warning code.
@@ -57,7 +44,7 @@ impl Code {
         S0: Into<String>,
         S1: Into<String>,
     {
-        Self::from(Warning, code, message)
+        Self::new(Warning, code.into(), message.into())
     }
 
     /// Creates a new info code.
@@ -66,7 +53,7 @@ impl Code {
         S0: Into<String>,
         S1: Into<String>,
     {
-        Self::from(Info, code, message)
+        Self::new(Info, code.into(), message.into())
     }
 }
 
@@ -102,6 +89,8 @@ impl Display for Code {
         )
     }
 }
+
+impl std::error::Error for Code {}
 
 #[cfg(test)]
 mod tests {

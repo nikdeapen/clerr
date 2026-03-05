@@ -15,20 +15,24 @@ use colored::{ColoredString, Colorize};
 /// ```
 #[derive(Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug)]
 pub struct TokenInfo<'a> {
+    /// The file name.
     pub file_name: &'a str,
+    /// The 1-based line number.
     pub line: usize,
+    /// The 0-based column position within the line.
     pub position: usize,
+    /// The text content of the line.
     pub line_text: &'a str,
+    /// The length of the token in characters.
     pub token_len: usize,
+    /// The severity used for the underline and message color.
     pub severity: Severity,
+    /// The message displayed under the token.
     pub message: &'a str,
 }
 
-impl<'a> TokenInfo<'a> {
-    //! Entry
-
-    /// Constructs the report entry.
-    pub fn entry(&self) -> Vec<ColoredString> {
+impl<'a> super::ReportEntry for TokenInfo<'a> {
+    fn entry(self) -> Vec<ColoredString> {
         let line_number: String = self.line.to_string();
         vec![
             // 1 - file name
@@ -78,7 +82,7 @@ mod tests {
             message: "the 'line' token",
         };
         let code: Code = Code::error("an-error-code", "an error message");
-        let report: Report = Report::new(code).with_entry(info.entry());
+        let report: Report = Report::new(code).with_entry(info);
         println!("{}", report)
     }
 }
