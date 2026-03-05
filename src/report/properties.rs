@@ -77,6 +77,32 @@ impl Properties {
 #[cfg(test)]
 mod tests {
     use crate::{Code, Properties, Report};
+    use std::ops::Deref;
+
+    #[test]
+    fn column_alignment() {
+        let entry = Properties::default()
+            .with("a", "v1")
+            .with("abc", "v2")
+            .with("ab", "v3")
+            .entry();
+
+        // Each property produces 5 or 6 elements: indent, name, colon, spaces, value, [newline]
+        // Extract the spacing element (index 3) from each property's group
+        let spacing = |group: usize| -> &str {
+            let base = group * 6; // 6 elements per non-last group, but last has 5
+            let idx = if group < 2 { base + 3 } else { base + 3 };
+            entry[idx].deref()
+        };
+
+        // Longest name is "abc" (3 chars).
+        // "a"   (1 char) -> 3 - 1 + 2 = 4 spaces
+        // "abc" (3 chars) -> 3 - 3 + 2 = 2 spaces
+        // "ab"  (2 chars) -> 3 - 2 + 2 = 3 spaces
+        assert_eq!(spacing(0), "    ");
+        assert_eq!(spacing(1), "  ");
+        assert_eq!(spacing(2), "   ");
+    }
 
     #[test]
     #[ignore]
