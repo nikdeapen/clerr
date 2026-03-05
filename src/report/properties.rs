@@ -74,7 +74,7 @@ impl super::ReportEntry for Properties {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Code, Properties, ReportEntry, Report};
+    use crate::{Code, Properties, Report, ReportEntry};
     use std::ops::Deref;
 
     #[test]
