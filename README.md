@@ -6,7 +6,7 @@ A Rust library for colored command-line error, warning, and info reporting.
 
 ```toml
 [dependencies]
-clerr = "0.9.0"
+clerr = "0.10.0-rc.1"
 ```
 
 ### Dependencies
