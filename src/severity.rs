@@ -4,9 +4,9 @@ use std::fmt::{Display, Formatter};
 /// The severity of a command-line report.
 #[derive(Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug)]
 pub enum Severity {
-    Error,
-    Warning,
     Info,
+    Warning,
+    Error,
 }
 
 impl Severity {

@@ -15,12 +15,19 @@ use colored::{ColoredString, Colorize};
 /// ```
 #[derive(Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug)]
 pub struct TokenInfo<'a> {
+    /// The file name.
     pub file_name: &'a str,
+    /// The 1-based line number.
     pub line: usize,
+    /// The 0-based column position within the line.
     pub position: usize,
+    /// The text content of the line.
     pub line_text: &'a str,
+    /// The length of the token in characters.
     pub token_len: usize,
+    /// The severity used for the underline and message color.
     pub severity: Severity,
+    /// The message displayed under the token.
     pub message: &'a str,
 }
 

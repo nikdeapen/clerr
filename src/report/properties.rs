@@ -55,17 +55,20 @@ impl Properties {
             .map(|(p, _)| p.len())
             .max()
             .unwrap_or(0);
-        let mut entry: Vec<ColoredString> = Vec::with_capacity(self.properties.len() * 6);
-        for (property, value) in self.properties.drain(..) {
-            let len: usize = property.len();
-            let spaces: usize = max_len - len + 2;
+        let len = self.properties.len();
+        let mut entry: Vec<ColoredString> = Vec::with_capacity(len * 6);
+        for (i, (property, value)) in self.properties.drain(..).enumerate() {
+            let prop_len: usize = property.len();
+            let spaces: usize = max_len - prop_len + 2;
 
             entry.push("    ".normal());
             entry.push(property.color(Info.color()));
             entry.push(":".color(Info.color()));
             entry.push(util::char_count(' ', spaces).normal());
             entry.push(value.normal());
-            entry.push("\n".normal());
+            if i + 1 < len {
+                entry.push("\n".normal());
+            }
         }
         entry
     }
