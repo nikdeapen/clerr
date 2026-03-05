@@ -31,11 +31,8 @@ pub struct TokenInfo<'a> {
     pub message: &'a str,
 }
 
-impl<'a> TokenInfo<'a> {
-    //! Entry
-
-    /// Constructs the report entry.
-    pub fn entry(&self) -> Vec<ColoredString> {
+impl<'a> super::ReportEntry for TokenInfo<'a> {
+    fn entry(self) -> Vec<ColoredString> {
         let line_number: String = self.line.to_string();
         vec![
             // 1 - file name
@@ -85,7 +82,7 @@ mod tests {
             message: "the 'line' token",
         };
         let code: Code = Code::error("an-error-code", "an error message");
-        let report: Report = Report::new(code).with_entry(info.entry());
+        let report: Report = Report::new(code).with_entry(info);
         println!("{}", report)
     }
 }

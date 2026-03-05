@@ -90,6 +90,8 @@ impl Display for Code {
     }
 }
 
+impl std::error::Error for Code {}
+
 #[cfg(test)]
 mod tests {
     use crate::Code;

@@ -11,7 +11,7 @@ use colored::{ColoredString, Colorize};
 ///     second: another value
 ///     third:  third value
 /// ```
-#[derive(Default)]
+#[derive(Clone, Debug, Default)]
 pub struct Properties {
     properties: Vec<(String, String)>,
 }
@@ -34,7 +34,8 @@ impl Properties {
     }
 
     /// Adds the property.
-    pub fn with<S0, S1>(mut self, name: S0, value: S1) -> Self
+    #[must_use]
+    pub fn with_property<S0, S1>(mut self, name: S0, value: S1) -> Self
     where
         S0: Into<String>,
         S1: Into<String>,
@@ -44,11 +45,8 @@ impl Properties {
     }
 }
 
-impl Properties {
-    //! Entry
-
-    /// Constructs the report entry.
-    pub fn entry(mut self) -> Vec<ColoredString> {
+impl super::ReportEntry for Properties {
+    fn entry(mut self) -> Vec<ColoredString> {
         let max_len: usize = self
             .properties
             .iter()
@@ -76,22 +74,22 @@ impl Properties {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Code, Properties, Report};
+    use crate::{Code, Properties, ReportEntry, Report};
     use std::ops::Deref;
 
     #[test]
     fn column_alignment() {
         let entry = Properties::default()
-            .with("a", "v1")
-            .with("abc", "v2")
-            .with("ab", "v3")
+            .with_property("a", "v1")
+            .with_property("abc", "v2")
+            .with_property("ab", "v3")
             .entry();
 
         // Each property produces 5 or 6 elements: indent, name, colon, spaces, value, [newline]
         // Extract the spacing element (index 3) from each property's group
         let spacing = |group: usize| -> &str {
             let base = group * 6; // 6 elements per non-last group, but last has 5
-            let idx = if group < 2 { base + 3 } else { base + 3 };
+            let idx = base + 3;
             entry[idx].deref()
         };
 
@@ -107,15 +105,12 @@ mod tests {
     #[test]
     #[ignore]
     fn properties() {
-        let properties: Properties = Properties {
-            properties: vec![
-                ("one".to_string(), "two".to_string()),
-                ("three".to_string(), "four".to_string()),
-                ("five".to_string(), "six".to_string()),
-            ],
-        };
+        let properties: Properties = Properties::default()
+            .with_property("one", "two")
+            .with_property("three", "four")
+            .with_property("five", "six");
         let code: Code = Code::error("an-error-code", "an error message");
-        let report: Report = Report::new(code).with_entry(properties.entry());
+        let report: Report = Report::new(code).with_entry(properties);
         println!("{}", report)
     }
 }

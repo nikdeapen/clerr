@@ -2,11 +2,7 @@ use colored::{ColoredString, Colorize};
 
 /// Generates `c` `count` times.
 pub fn char_count(c: char, count: usize) -> String {
-    let mut s: String = String::with_capacity(c.len_utf8() * count);
-    for _ in 0..count {
-        s.push(c);
-    }
-    s
+    std::iter::repeat_n(c, count).collect()
 }
 
 /// Generates the two-dash arrow
