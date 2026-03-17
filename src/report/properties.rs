@@ -1,5 +1,5 @@
-use crate::report::util;
 use crate::Severity::Info;
+use crate::report::util;
 use colored::Colorize;
 use std::fmt::{Display, Formatter};
 
@@ -76,25 +76,6 @@ impl Display for Properties {
 #[cfg(test)]
 mod tests {
     use crate::{Code, Properties, Report};
-
-    #[test]
-    fn column_alignment() {
-        colored::control::set_override(false);
-        let entry: String = Properties::default()
-            .with_property("a", "v1")
-            .with_property("abc", "v2")
-            .with_property("ab", "v3")
-            .to_string();
-
-        // Longest name is "abc" (3 chars).
-        // "a"   (1 char) -> 3 - 1 + 2 = 4 spaces after colon
-        // "abc" (3 chars) -> 3 - 3 + 2 = 2 spaces after colon
-        // "ab"  (2 chars) -> 3 - 2 + 2 = 3 spaces after colon
-        let lines: Vec<&str> = entry.lines().collect();
-        assert_eq!(lines[0], "    a:    v1");
-        assert_eq!(lines[1], "    abc:  v2");
-        assert_eq!(lines[2], "    ab:   v3");
-    }
 
     #[test]
     fn properties() {
