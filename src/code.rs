@@ -3,17 +3,17 @@ use crate::Severity::{Error, Info, Warning};
 use colored::Colorize;
 use std::fmt::{Display, Formatter};
 
-/// A command-line report code with an associated severity and message.
+/// A command-line report code with an associated severity, identifier, and message.
 ///
 /// # Display
 ///
 /// ```text
-/// severity[code]: message
+/// severity[id]: message
 /// ```
-#[derive(Clone, Debug)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub struct Code {
     severity: Severity,
-    code: String,
+    id: String,
     message: String,
 }
 
@@ -21,39 +21,43 @@ impl Code {
     //! Construction
 
     /// Creates a new command-line report code.
-    pub const fn new(severity: Severity, code: String, message: String) -> Self {
+    pub fn new<S0, S1>(severity: Severity, id: S0, message: S1) -> Self
+    where
+        S0: Into<String>,
+        S1: Into<String>,
+    {
         Self {
             severity,
-            code,
-            message,
+            id: id.into(),
+            message: message.into(),
         }
     }
 
     /// Creates a new error code.
-    pub fn error<S0, S1>(code: S0, message: S1) -> Self
+    pub fn error<S0, S1>(id: S0, message: S1) -> Self
     where
         S0: Into<String>,
         S1: Into<String>,
     {
-        Self::new(Error, code.into(), message.into())
+        Self::new(Error, id, message)
     }
 
     /// Creates a new warning code.
-    pub fn warning<S0, S1>(code: S0, message: S1) -> Self
+    pub fn warning<S0, S1>(id: S0, message: S1) -> Self
     where
         S0: Into<String>,
         S1: Into<String>,
     {
-        Self::new(Warning, code.into(), message.into())
+        Self::new(Warning, id, message)
     }
 
     /// Creates a new info code.
-    pub fn info<S0, S1>(code: S0, message: S1) -> Self
+    pub fn info<S0, S1>(id: S0, message: S1) -> Self
     where
         S0: Into<String>,
         S1: Into<String>,
     {
-        Self::new(Info, code.into(), message.into())
+        Self::new(Info, id, message)
     }
 }
 
@@ -65,9 +69,9 @@ impl Code {
         self.severity
     }
 
-    /// Gets the code.
-    pub fn code(&self) -> &str {
-        self.code.as_str()
+    /// Gets the identifier.
+    pub fn id(&self) -> &str {
+        self.id.as_str()
     }
 
     /// Gets the message.
@@ -83,23 +87,20 @@ impl Display for Code {
             "{}{}{}{}{}",
             self.severity,
             "[".color(self.severity.color()),
-            self.code.color(self.severity.color()),
+            self.id.color(self.severity.color()),
             "]: ".color(self.severity.color()),
             self.message.bright_white().bold()
         )
     }
 }
 
-impl std::error::Error for Code {}
-
 #[cfg(test)]
 mod tests {
     use crate::Code;
 
     #[test]
-    #[ignore]
     fn display() {
-        let code: Code = Code::warning("12345", "the error message");
+        let code: Code = Code::error("12345", "the error message");
         println!("{}", code);
     }
 }

@@ -1,6 +1,7 @@
-use crate::report::util;
 use crate::Severity::Info;
-use colored::{ColoredString, Colorize};
+use crate::report::util;
+use colored::Colorize;
+use std::fmt::{Display, Formatter};
 
 /// A properties entry.
 ///
@@ -11,7 +12,7 @@ use colored::{ColoredString, Colorize};
 ///     second: another value
 ///     third:  third value
 /// ```
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Properties {
     properties: Vec<(String, String)>,
 }
@@ -25,7 +26,7 @@ impl Properties {
     }
 
     /// Adds the property.
-    pub fn add<S0, S1>(&mut self, name: S0, value: S1)
+    pub fn add_property<S0, S1>(&mut self, name: S0, value: S1)
     where
         S0: Into<String>,
         S1: Into<String>,
@@ -40,77 +41,50 @@ impl Properties {
         S0: Into<String>,
         S1: Into<String>,
     {
-        self.add(name, value);
+        self.add_property(name, value);
         self
     }
 }
 
-impl super::ReportEntry for Properties {
-    fn entry(mut self) -> Vec<ColoredString> {
+impl Display for Properties {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let max_len: usize = self
             .properties
             .iter()
             .map(|(p, _)| p.len())
             .max()
             .unwrap_or(0);
-        let len = self.properties.len();
-        let mut entry: Vec<ColoredString> = Vec::with_capacity(len * 6);
-        for (i, (property, value)) in self.properties.drain(..).enumerate() {
-            let prop_len: usize = property.len();
-            let spaces: usize = max_len - prop_len + 2;
-
-            entry.push("    ".normal());
-            entry.push(property.color(Info.color()));
-            entry.push(":".color(Info.color()));
-            entry.push(util::char_count(' ', spaces).normal());
-            entry.push(value.normal());
+        let len: usize = self.properties.len();
+        for (i, (property, value)) in self.properties.iter().enumerate() {
+            let spaces: String = util::char_count(' ', max_len - property.len() + 2);
+            write!(
+                f,
+                "    {}{}{}{}",
+                property.color(Info.color()),
+                ":".color(Info.color()),
+                spaces,
+                value
+            )?;
             if i + 1 < len {
-                entry.push("\n".normal());
+                writeln!(f)?;
             }
         }
-        entry
+        Ok(())
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::{Code, Properties, Report, ReportEntry};
-    use std::ops::Deref;
+    use crate::{Code, Properties, Report};
 
     #[test]
-    fn column_alignment() {
-        let entry = Properties::default()
-            .with_property("a", "v1")
-            .with_property("abc", "v2")
-            .with_property("ab", "v3")
-            .entry();
-
-        // Each property produces 5 or 6 elements: indent, name, colon, spaces, value, [newline]
-        // Extract the spacing element (index 3) from each property's group
-        let spacing = |group: usize| -> &str {
-            let base = group * 6; // 6 elements per non-last group, but last has 5
-            let idx = base + 3;
-            entry[idx].deref()
-        };
-
-        // Longest name is "abc" (3 chars).
-        // "a"   (1 char) -> 3 - 1 + 2 = 4 spaces
-        // "abc" (3 chars) -> 3 - 3 + 2 = 2 spaces
-        // "ab"  (2 chars) -> 3 - 2 + 2 = 3 spaces
-        assert_eq!(spacing(0), "    ");
-        assert_eq!(spacing(1), "  ");
-        assert_eq!(spacing(2), "   ");
-    }
-
-    #[test]
-    #[ignore]
     fn properties() {
         let properties: Properties = Properties::default()
             .with_property("one", "two")
             .with_property("three", "four")
             .with_property("five", "six");
         let code: Code = Code::error("an-error-code", "an error message");
-        let report: Report = Report::new(code).with_entry(properties);
+        let report: Report = Report::from(code).with_entry(properties);
         println!("{}", report)
     }
 }
