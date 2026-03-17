@@ -10,7 +10,7 @@ pub enum Severity {
 }
 
 impl Severity {
-    //! Display
+    //! Properties
 
     /// Gets the label string.
     pub fn label(self) -> &'static str {

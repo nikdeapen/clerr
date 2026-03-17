@@ -91,7 +91,7 @@ Three severity levels are available, each with a distinct color:
 | `Warning` | Yellow |
 | `Info`    | Blue   |
 
-These colors are hardcoded for the colorblind.
+These colors are intentionally fixed for consistency.
 
 ## Issues & Contributing
 

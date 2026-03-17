@@ -12,7 +12,7 @@ use std::fmt::{Display, Formatter};
 ///     second: another value
 ///     third:  third value
 /// ```
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Properties {
     properties: Vec<(String, String)>,
 }
