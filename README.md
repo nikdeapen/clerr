@@ -6,7 +6,7 @@
 
 This library aids in command-line error reporting.
 
-    clerr = "0.10.0-rc.1"
+    clerr = "0.10.0-rc.2"
 
 ### Dependencies
 
