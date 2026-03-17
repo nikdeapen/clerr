@@ -8,6 +8,8 @@ homepage = "https://github.com/nikdeapen/clerr"
 authors = ["Nik Deapen <nik@deapen.com>"]
 edition = "2021"
 license = "MIT"
+keywords = ["cli", "error", "report", "colored"]
+categories = ["command-line-interface"]
 
 [dependencies]
 colored = "3.1.1"

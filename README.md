@@ -37,12 +37,12 @@ use clerr::*;
 
 let code: Code = Code::warning("W012", "unused variable");
 let info: TokenInfo = TokenInfo {
+    severity: Severity::Warning,
     file_name: "src/main.rs",
     line: 8,
     position: 4,
     line_text: "    let x = 42;",
     token_len: 1,
-    severity: Severity::Warning,
     message: "consider prefixing with `_`",
 };
 let report: Report = Report::from(code).with_entry(info);

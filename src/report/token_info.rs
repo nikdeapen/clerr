@@ -1,6 +1,6 @@
 use crate::report::util;
 use crate::Severity;
-use colored::Colorize;
+use colored::{Color, Colorize};
 use std::fmt::{Display, Formatter};
 
 /// A token info entry.
@@ -37,7 +37,7 @@ impl<'a> Display for TokenInfo<'a> {
         let line_number: String = self.line.to_string();
         let spaces: String = util::char_count(' ', line_number.len());
         let vertical: String = util::vertical();
-        let color = self.severity.color();
+        let color: Color = self.severity.color();
 
         // 1 - file name
         write!(
@@ -76,15 +76,14 @@ mod tests {
     use crate::{Code, Report, TokenInfo};
 
     #[test]
-    #[ignore]
     fn token_info() {
         let info: TokenInfo = TokenInfo {
+            severity: Warning,
             file_name: "the/file/name.ext",
             line: 12,
             position: 4,
             line_text: "the line text",
             token_len: 4,
-            severity: Warning,
             message: "the 'line' token",
         };
         let code: Code = Code::error("an-error-code", "an error message");

@@ -99,7 +99,6 @@ mod tests {
     use crate::Code;
 
     #[test]
-    #[ignore]
     fn display() {
         let code: Code = Code::error("12345", "the error message");
         println!("{}", code);

@@ -97,7 +97,6 @@ mod tests {
     }
 
     #[test]
-    #[ignore]
     fn properties() {
         let properties: Properties = Properties::default()
             .with_property("one", "two")

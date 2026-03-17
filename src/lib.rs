@@ -1,26 +1,21 @@
-//! A library for colored command-line error, warning, and info reporting.
+//! This library aids in command-line error reporting.
 //!
 //! # Example
 //!
 //! ```
 //! use clerr::*;
 //!
-//! let code: Code = Code::error("E001", "unexpected token");
-//! let token_info: TokenInfo = TokenInfo {
+//! let code: Code = Code::warning("W012", "unused variable");
+//! let info: TokenInfo = TokenInfo {
+//!     severity: Severity::Warning,
 //!     file_name: "src/main.rs",
-//!     line: 12,
+//!     line: 8,
 //!     position: 4,
-//!     line_text: "let x = @;",
+//!     line_text: "    let x = 42;",
 //!     token_len: 1,
-//!     severity: Severity::Error,
-//!     message: "expected expression",
+//!     message: "consider prefixing with `_`",
 //! };
-//! let properties: Properties = Properties::default()
-//!     .with_property("expected", "expression")
-//!     .with_property("found", "@");
-//! let report: Report = Report::from(code)
-//!     .with_entry(token_info)
-//!     .with_entry(properties);
+//! let report: Report = Report::from(code).with_entry(info);
 //! eprintln!("{}", report);
 //! ```
 
