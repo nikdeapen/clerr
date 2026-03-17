@@ -1,5 +1,5 @@
-use crate::report::util;
 use crate::Severity;
+use crate::report::util;
 use colored::{Color, Colorize};
 use std::fmt::{Display, Formatter};
 
