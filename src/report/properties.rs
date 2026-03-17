@@ -1,6 +1,7 @@
 use crate::report::util;
 use crate::Severity::Info;
-use colored::{ColoredString, Colorize};
+use colored::Colorize;
+use std::fmt::{Display, Formatter};
 
 /// A properties entry.
 ///
@@ -45,61 +46,54 @@ impl Properties {
     }
 }
 
-impl super::ReportEntry for Properties {
-    fn entry(mut self) -> Vec<ColoredString> {
+impl Display for Properties {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let max_len: usize = self
             .properties
             .iter()
             .map(|(p, _)| p.len())
             .max()
             .unwrap_or(0);
-        let len = self.properties.len();
-        let mut entry: Vec<ColoredString> = Vec::with_capacity(len * 6);
-        for (i, (property, value)) in self.properties.drain(..).enumerate() {
-            let prop_len: usize = property.len();
-            let spaces: usize = max_len - prop_len + 2;
-
-            entry.push("    ".normal());
-            entry.push(property.color(Info.color()));
-            entry.push(":".color(Info.color()));
-            entry.push(util::char_count(' ', spaces).normal());
-            entry.push(value.normal());
+        let len: usize = self.properties.len();
+        for (i, (property, value)) in self.properties.iter().enumerate() {
+            let spaces: String = util::char_count(' ', max_len - property.len() + 2);
+            write!(
+                f,
+                "    {}{}{}{}",
+                property.color(Info.color()),
+                ":".color(Info.color()),
+                spaces,
+                value
+            )?;
             if i + 1 < len {
-                entry.push("\n".normal());
+                writeln!(f)?;
             }
         }
-        entry
+        Ok(())
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::{Code, Properties, Report, ReportEntry};
-    use std::ops::Deref;
+    use crate::{Code, Properties, Report};
 
     #[test]
     fn column_alignment() {
-        let entry = Properties::default()
+        colored::control::set_override(false);
+        let entry: String = Properties::default()
             .with_property("a", "v1")
             .with_property("abc", "v2")
             .with_property("ab", "v3")
-            .entry();
-
-        // Each property produces 5 or 6 elements: indent, name, colon, spaces, value, [newline]
-        // Extract the spacing element (index 3) from each property's group
-        let spacing = |group: usize| -> &str {
-            let base = group * 6; // 6 elements per non-last group, but last has 5
-            let idx = base + 3;
-            entry[idx].deref()
-        };
+            .to_string();
 
         // Longest name is "abc" (3 chars).
-        // "a"   (1 char) -> 3 - 1 + 2 = 4 spaces
-        // "abc" (3 chars) -> 3 - 3 + 2 = 2 spaces
-        // "ab"  (2 chars) -> 3 - 2 + 2 = 3 spaces
-        assert_eq!(spacing(0), "    ");
-        assert_eq!(spacing(1), "  ");
-        assert_eq!(spacing(2), "   ");
+        // "a"   (1 char) -> 3 - 1 + 2 = 4 spaces after colon
+        // "abc" (3 chars) -> 3 - 3 + 2 = 2 spaces after colon
+        // "ab"  (2 chars) -> 3 - 2 + 2 = 3 spaces after colon
+        let lines: Vec<&str> = entry.lines().collect();
+        assert_eq!(lines[0], "    a:    v1");
+        assert_eq!(lines[1], "    abc:  v2");
+        assert_eq!(lines[2], "    ab:   v3");
     }
 
     #[test]
@@ -110,7 +104,7 @@ mod tests {
             .with_property("three", "four")
             .with_property("five", "six");
         let code: Code = Code::error("an-error-code", "an error message");
-        let report: Report = Report::new(code).with_entry(properties);
+        let report: Report = Report::from(code).with_entry(properties);
         println!("{}", report)
     }
 }
