@@ -26,7 +26,7 @@ impl Properties {
     }
 
     /// Adds the property.
-    pub fn add<S0, S1>(&mut self, name: S0, value: S1)
+    pub fn add_property<S0, S1>(&mut self, name: S0, value: S1)
     where
         S0: Into<String>,
         S1: Into<String>,
@@ -41,7 +41,7 @@ impl Properties {
         S0: Into<String>,
         S1: Into<String>,
     {
-        self.add(name, value);
+        self.add_property(name, value);
         self
     }
 }
