@@ -1,4 +1,6 @@
 use crate::code::Code;
+use crate::report::entry::Entry;
+use colored::ColoredString;
 use std::fmt::{Display, Formatter};
 
 /// A command-line report.
@@ -9,17 +11,17 @@ use std::fmt::{Display, Formatter};
 /// severity[id]: message
 /// entries
 /// ```
-#[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub struct Report {
     code: Code,
-    entries: String,
+    entries: Vec<Entry>,
 }
 
 impl From<Code> for Report {
     fn from(code: Code) -> Self {
         Self {
             code,
-            entries: String::new(),
+            entries: Vec::new(),
         }
     }
 }
@@ -33,8 +35,8 @@ impl Report {
     }
 
     /// Gets the entries.
-    pub fn entries(&self) -> &str {
-        self.entries.as_str()
+    pub fn entries(&self) -> &[Entry] {
+        self.entries.as_slice()
     }
 }
 
@@ -42,25 +44,21 @@ impl Report {
     //! Entries
 
     /// Adds the `entry`.
-    pub fn add_entry<D>(&mut self, entry: D)
+    pub fn add_entry<E>(&mut self, entry: E)
     where
-        D: Display,
+        E: Into<Vec<ColoredString>>,
     {
-        let entry: String = entry.to_string();
-        if self.entries.is_empty() {
-            self.entries.push_str(entry.as_str());
-        } else {
-            self.entries.reserve(1 + entry.len());
-            self.entries.push('\n');
-            self.entries.push_str(entry.as_str());
+        let entry: Vec<ColoredString> = entry.into();
+        if !entry.is_empty() {
+            self.entries.push(Entry::from(entry));
         }
     }
 
     /// Adds the `entry`.
     #[must_use]
-    pub fn with_entry<D>(mut self, entry: D) -> Self
+    pub fn with_entry<E>(mut self, entry: E) -> Self
     where
-        D: Display,
+        E: Into<Vec<ColoredString>>,
     {
         self.add_entry(entry);
         self
@@ -71,10 +69,11 @@ impl std::error::Error for Report {}
 
 impl Display for Report {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        if self.entries.is_empty() {
-            write!(f, "{}", self.code)
-        } else {
-            write!(f, "{}\n{}", self.code, self.entries)
+        write!(f, "{}", self.code)?;
+        for entry in &self.entries {
+            writeln!(f)?;
+            write!(f, "{}", entry)?;
         }
+        Ok(())
     }
 }

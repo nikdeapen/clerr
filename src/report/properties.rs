@@ -1,6 +1,6 @@
 use crate::Severity::Info;
 use crate::report::util;
-use colored::Colorize;
+use colored::{Color, ColoredString, Colorize};
 use std::fmt::{Display, Formatter};
 
 /// A properties entry.
@@ -8,9 +8,9 @@ use std::fmt::{Display, Formatter};
 /// # Display
 ///
 /// ```text
-///     first:  value
-///     second: another value
-///     third:  third value
+///     file:      /etc/config.yml
+///     expected:  utf-8
+///     found:     binary
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Properties {
@@ -46,28 +46,37 @@ impl Properties {
     }
 }
 
-impl Display for Properties {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let max_len: usize = self
+impl From<Properties> for Vec<ColoredString> {
+    fn from(props: Properties) -> Vec<ColoredString> {
+        let max_len: usize = props
             .properties
             .iter()
             .map(|(p, _)| p.len())
             .max()
             .unwrap_or(0);
-        let len: usize = self.properties.len();
-        for (i, (property, value)) in self.properties.iter().enumerate() {
+        let len: usize = props.properties.len();
+        let color: Color = Info.color();
+        let mut result: Vec<ColoredString> = Vec::new();
+        for (i, (property, value)) in props.properties.into_iter().enumerate() {
             let spaces: String = util::char_count(' ', max_len - property.len() + 2);
-            write!(
-                f,
-                "    {}{}{}{}",
-                property.color(Info.color()),
-                ":".color(Info.color()),
-                spaces,
-                value
-            )?;
+            result.push("    ".normal());
+            result.push(property.color(color));
+            result.push(":".color(color));
+            result.push(spaces.normal());
+            result.push(value.normal());
             if i + 1 < len {
-                writeln!(f)?;
+                result.push("\n".normal());
             }
+        }
+        result
+    }
+}
+
+impl Display for Properties {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let strings: Vec<ColoredString> = Vec::from(self.clone());
+        for string in &strings {
+            write!(f, "{}", string)?;
         }
         Ok(())
     }
@@ -85,6 +94,6 @@ mod tests {
             .with_property("five", "six");
         let code: Code = Code::error("an-error-code", "an error message");
         let report: Report = Report::from(code).with_entry(properties);
-        println!("{}", report)
+        println!("properties:\n{}\n", report);
     }
 }

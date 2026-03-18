@@ -10,10 +10,10 @@ pub enum Severity {
 }
 
 impl Severity {
-    //! Properties
+    //! Display
 
     /// Gets the label string.
-    pub fn label(self) -> &'static str {
+    pub(crate) fn label(self) -> &'static str {
         match self {
             Self::Error => "error",
             Self::Warning => "warning",
@@ -22,7 +22,7 @@ impl Severity {
     }
 
     /// Gets the associated color.
-    pub fn color(self) -> Color {
+    pub(crate) fn color(self) -> Color {
         match self {
             Self::Error => Color::BrightRed,
             Self::Warning => Color::BrightYellow,

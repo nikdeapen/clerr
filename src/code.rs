@@ -1,9 +1,9 @@
 use crate::Severity;
 use crate::Severity::{Error, Info, Warning};
-use colored::Colorize;
+use colored::{Color, Colorize};
 use std::fmt::{Display, Formatter};
 
-/// A command-line report code with an associated severity, identifier, and message.
+/// A command-line report code with a severity, identifier, and message.
 ///
 /// # Display
 ///
@@ -82,13 +82,14 @@ impl Code {
 
 impl Display for Code {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let color: Color = self.severity.color();
         write!(
             f,
             "{}{}{}{}{}",
             self.severity,
-            "[".color(self.severity.color()),
-            self.id.color(self.severity.color()),
-            "]: ".color(self.severity.color()),
+            "[".color(color),
+            self.id.color(color),
+            "]: ".color(color),
             self.message.bright_white().bold()
         )
     }
@@ -101,6 +102,6 @@ mod tests {
     #[test]
     fn display() {
         let code: Code = Code::error("12345", "the error message");
-        println!("{}", code);
+        println!("code:\n{}\n", code);
     }
 }
