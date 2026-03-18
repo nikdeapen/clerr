@@ -3,7 +3,7 @@ use crate::Severity::{Error, Info, Warning};
 use colored::{Color, Colorize};
 use std::fmt::{Display, Formatter};
 
-/// A command-line report code with an associated severity, identifier, and message.
+/// A command-line report code with a severity, identifier, and message.
 ///
 /// # Display
 ///
@@ -20,7 +20,7 @@ pub struct Code {
 impl Code {
     //! Construction
 
-    /// Creates a new code.
+    /// Creates a new command-line report code.
     pub fn new<S0, S1>(severity: Severity, id: S0, message: S1) -> Self
     where
         S0: Into<String>,

@@ -8,13 +8,13 @@ use std::fmt::{Display, Formatter};
 /// # Display
 ///
 /// ```text
-///  --> the/file/name.ext
+///  --> the/file/name.ext [line=8, position=5]
 ///   |
 /// 8 | the line text
-///   |     ^^^^ the message text
+///   |     ^^^^ --- the message text
 ///   |
 /// ```
-#[derive(Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub struct TokenInfo<'a> {
     /// The severity used for the underline and message color.
     pub severity: Severity,
@@ -69,43 +69,11 @@ impl<'a> From<TokenInfo<'a>> for Vec<ColoredString> {
 
 impl<'a> Display for TokenInfo<'a> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let line_number: String = self.line.to_string();
-        let spaces: String = util::char_count(' ', line_number.len());
-        let color: Color = self.severity.color();
-        let indent: String = util::char_count(' ', self.position);
-        let carets: String = util::char_count('^', self.token_len);
-
-        // 1 - file name
-        write!(
-            f,
-            "{}{}{}",
-            spaces,
-            "-->".bright_blue(),
-            util::file_and_token(self.file_name, self.line, self.position)
-        )?;
-        // 2 - empty
-        write!(f, "\n{}{}", spaces, " | ".bright_blue())?;
-        // 3 - line text
-        write!(
-            f,
-            "\n{}{}{}",
-            line_number.bright_blue(),
-            " | ".bright_blue(),
-            self.line_text
-        )?;
-        // 4 - error message
-        write!(
-            f,
-            "\n{}{}{}{}{}{}",
-            spaces,
-            " | ".bright_blue(),
-            indent,
-            carets.color(color),
-            " --- ".color(color),
-            self.message.color(color)
-        )?;
-        // 5 - empty
-        write!(f, "\n{}{}", spaces, " | ".bright_blue())
+        let strings: Vec<ColoredString> = Vec::from(*self);
+        for string in &strings {
+            write!(f, "{}", string)?;
+        }
+        Ok(())
     }
 }
 

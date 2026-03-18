@@ -8,9 +8,9 @@ use std::fmt::{Display, Formatter};
 /// # Display
 ///
 /// ```text
-///     first:  value
-///     second: another value
-///     third:  third value
+///     file:      /etc/config.yml
+///     expected:  utf-8
+///     found:     binary
 /// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Properties {
@@ -74,27 +74,9 @@ impl From<Properties> for Vec<ColoredString> {
 
 impl Display for Properties {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let max_len: usize = self
-            .properties
-            .iter()
-            .map(|(p, _)| p.len())
-            .max()
-            .unwrap_or(0);
-        let len: usize = self.properties.len();
-        let color: Color = Info.color();
-        for (i, (property, value)) in self.properties.iter().enumerate() {
-            let spaces: String = util::char_count(' ', max_len - property.len() + 2);
-            write!(
-                f,
-                "    {}{}{}{}",
-                property.color(color),
-                ":".color(color),
-                spaces,
-                value
-            )?;
-            if i + 1 < len {
-                writeln!(f)?;
-            }
+        let strings: Vec<ColoredString> = Vec::from(self.clone());
+        for string in &strings {
+            write!(f, "{}", string)?;
         }
         Ok(())
     }

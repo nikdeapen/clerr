@@ -11,7 +11,7 @@ use std::fmt::{Display, Formatter};
 /// severity[id]: message
 /// entries
 /// ```
-#[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub struct Report {
     code: Code,
     entries: Vec<Entry>,

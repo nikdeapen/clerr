@@ -6,8 +6,7 @@
 
 This library aids in command-line error reporting.
 
-    clerr = "0.10.0-rc.3"
-
+    clerr = "0.10.0"
 
 ## Examples
 
