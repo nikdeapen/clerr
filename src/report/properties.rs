@@ -1,6 +1,6 @@
 use crate::Severity::Info;
 use crate::report::util;
-use colored::Colorize;
+use colored::{Color, ColoredString, Colorize};
 use std::fmt::{Display, Formatter};
 
 /// A properties entry.
@@ -46,6 +46,32 @@ impl Properties {
     }
 }
 
+impl From<Properties> for Vec<ColoredString> {
+    fn from(props: Properties) -> Vec<ColoredString> {
+        let max_len: usize = props
+            .properties
+            .iter()
+            .map(|(p, _)| p.len())
+            .max()
+            .unwrap_or(0);
+        let len: usize = props.properties.len();
+        let color: Color = Info.color();
+        let mut result: Vec<ColoredString> = Vec::new();
+        for (i, (property, value)) in props.properties.into_iter().enumerate() {
+            let spaces: String = util::char_count(' ', max_len - property.len() + 2);
+            result.push("    ".normal());
+            result.push(property.color(color));
+            result.push(":".color(color));
+            result.push(spaces.normal());
+            result.push(value.normal());
+            if i + 1 < len {
+                result.push("\n".normal());
+            }
+        }
+        result
+    }
+}
+
 impl Display for Properties {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let max_len: usize = self
@@ -55,13 +81,14 @@ impl Display for Properties {
             .max()
             .unwrap_or(0);
         let len: usize = self.properties.len();
+        let color: Color = Info.color();
         for (i, (property, value)) in self.properties.iter().enumerate() {
             let spaces: String = util::char_count(' ', max_len - property.len() + 2);
             write!(
                 f,
                 "    {}{}{}{}",
-                property.color(Info.color()),
-                ":".color(Info.color()),
+                property.color(color),
+                ":".color(color),
                 spaces,
                 value
             )?;
@@ -85,6 +112,6 @@ mod tests {
             .with_property("five", "six");
         let code: Code = Code::error("an-error-code", "an error message");
         let report: Report = Report::from(code).with_entry(properties);
-        println!("{}", report)
+        println!("properties:\n{}\n", report);
     }
 }

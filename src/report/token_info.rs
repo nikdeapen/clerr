@@ -1,6 +1,6 @@
 use crate::Severity;
 use crate::report::util;
-use colored::{Color, Colorize};
+use colored::{Color, ColoredString, Colorize};
 use std::fmt::{Display, Formatter};
 
 /// A token info entry.
@@ -32,41 +32,80 @@ pub struct TokenInfo<'a> {
     pub message: &'a str,
 }
 
+impl<'a> From<TokenInfo<'a>> for Vec<ColoredString> {
+    fn from(info: TokenInfo<'a>) -> Vec<ColoredString> {
+        let line_number: String = info.line.to_string();
+        let spaces: String = util::char_count(' ', line_number.len());
+        let color: Color = info.severity.color();
+        let indent: String = util::char_count(' ', info.position);
+        let carets: String = util::char_count('^', info.token_len);
+
+        vec![
+            // 1 - file name
+            spaces.clone().normal(),
+            "-->".bright_blue(),
+            util::file_and_token(info.file_name, info.line, info.position).normal(),
+            // 2 - empty
+            format!("\n{spaces}").normal(),
+            " | ".bright_blue(),
+            // 3 - line text
+            "\n".normal(),
+            line_number.bright_blue(),
+            " | ".bright_blue(),
+            info.line_text.normal(),
+            // 4 - error message
+            format!("\n{spaces}").normal(),
+            " | ".bright_blue(),
+            indent.normal(),
+            carets.color(color),
+            " --- ".color(color),
+            info.message.color(color),
+            // 5 - empty
+            format!("\n{spaces}").normal(),
+            " | ".bright_blue(),
+        ]
+    }
+}
+
 impl<'a> Display for TokenInfo<'a> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let line_number: String = self.line.to_string();
         let spaces: String = util::char_count(' ', line_number.len());
-        let vertical: String = util::vertical();
         let color: Color = self.severity.color();
+        let indent: String = util::char_count(' ', self.position);
+        let carets: String = util::char_count('^', self.token_len);
 
         // 1 - file name
         write!(
             f,
-            "{spaces}{}{}",
-            util::arrow(),
+            "{}{}{}",
+            spaces,
+            "-->".bright_blue(),
             util::file_and_token(self.file_name, self.line, self.position)
         )?;
         // 2 - empty
-        write!(f, "\n{spaces}{vertical}")?;
+        write!(f, "\n{}{}", spaces, " | ".bright_blue())?;
         // 3 - line text
         write!(
             f,
-            "\n{}{vertical}{}",
+            "\n{}{}{}",
             line_number.bright_blue(),
+            " | ".bright_blue(),
             self.line_text
         )?;
         // 4 - error message
-        let indent: String = util::char_count(' ', self.position);
-        let carets: String = util::char_count('^', self.token_len);
         write!(
             f,
-            "\n{spaces}{vertical}{indent}{}{}{}",
+            "\n{}{}{}{}{}{}",
+            spaces,
+            " | ".bright_blue(),
+            indent,
             carets.color(color),
             " --- ".color(color),
             self.message.color(color)
         )?;
         // 5 - empty
-        write!(f, "\n{spaces}{vertical}")
+        write!(f, "\n{}{}", spaces, " | ".bright_blue())
     }
 }
 
@@ -88,6 +127,6 @@ mod tests {
         };
         let code: Code = Code::error("an-error-code", "an error message");
         let report: Report = Report::from(code).with_entry(info);
-        println!("{}", report)
+        println!("token-info:\n{}\n", report);
     }
 }

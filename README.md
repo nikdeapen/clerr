@@ -6,11 +6,8 @@
 
 This library aids in command-line error reporting.
 
-    clerr = "0.10.0-rc.2"
+    clerr = "0.10.0-rc.3"
 
-### Dependencies
-
-- [colored](https://crates.io/crates/colored)
 
 ## Examples
 
@@ -51,7 +48,7 @@ eprintln!("{}", report);
 
 ```text
 warning[W012]: unused variable
- --> src/main.rs [line=8, position=5]
+ --> src/main.rs [line=8, position=9]
   |
 8 |     let x = 42;
   |         ^ --- consider prefixing with `_`

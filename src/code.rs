@@ -102,6 +102,6 @@ mod tests {
     #[test]
     fn display() {
         let code: Code = Code::error("12345", "the error message");
-        println!("{}", code);
+        println!("code:\n{}\n", code);
     }
 }
