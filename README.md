@@ -40,7 +40,7 @@ let info: TokenInfo = TokenInfo {
     severity: Severity::Warning,
     file_name: "src/main.rs",
     line: 8,
-    position: 4,
+    position: 8,
     line_text: "    let x = 42;",
     token_len: 1,
     message: "consider prefixing with `_`",

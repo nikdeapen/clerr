@@ -1,6 +1,6 @@
 use crate::Severity;
 use crate::Severity::{Error, Info, Warning};
-use colored::Colorize;
+use colored::{Color, Colorize};
 use std::fmt::{Display, Formatter};
 
 /// A command-line report code with an associated severity, identifier, and message.
@@ -20,7 +20,7 @@ pub struct Code {
 impl Code {
     //! Construction
 
-    /// Creates a new command-line report code.
+    /// Creates a new code.
     pub fn new<S0, S1>(severity: Severity, id: S0, message: S1) -> Self
     where
         S0: Into<String>,
@@ -82,13 +82,14 @@ impl Code {
 
 impl Display for Code {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let color: Color = self.severity.color();
         write!(
             f,
             "{}{}{}{}{}",
             self.severity,
-            "[".color(self.severity.color()),
-            self.id.color(self.severity.color()),
-            "]: ".color(self.severity.color()),
+            "[".color(color),
+            self.id.color(color),
+            "]: ".color(color),
             self.message.bright_white().bold()
         )
     }
