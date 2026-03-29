@@ -35,8 +35,8 @@ impl Report {
     }
 
     /// Gets the entries.
-    pub fn entries(&self) -> &[Entry] {
-        self.entries.as_slice()
+    pub fn entries(&self) -> &[Vec<ColoredString>] {
+        unsafe { std::mem::transmute(self.entries.as_slice()) }
     }
 }
 
@@ -48,10 +48,7 @@ impl Report {
     where
         E: Into<Vec<ColoredString>>,
     {
-        let entry: Vec<ColoredString> = entry.into();
-        if !entry.is_empty() {
-            self.entries.push(Entry::from(entry));
-        }
+        self.entries.push(Entry::from(entry.into()));
     }
 
     /// Adds the `entry`.

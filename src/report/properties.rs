@@ -46,25 +46,25 @@ impl Properties {
     }
 }
 
-impl From<Properties> for Vec<ColoredString> {
-    fn from(props: Properties) -> Vec<ColoredString> {
-        let max_len: usize = props
-            .properties
+impl From<&Properties> for Vec<ColoredString> {
+    fn from(properties: &Properties) -> Vec<ColoredString> {
+        let properties: &[(String, String)] = properties.properties.as_slice();
+        let max_len: usize = properties
             .iter()
-            .map(|(p, _)| p.len())
+            .map(|(name, _)| name.len())
             .max()
             .unwrap_or(0);
-        let len: usize = props.properties.len();
+        let count: usize = properties.len();
         let color: Color = Info.color();
-        let mut result: Vec<ColoredString> = Vec::new();
-        for (i, (property, value)) in props.properties.into_iter().enumerate() {
-            let spaces: String = util::char_count(' ', max_len - property.len() + 2);
+        let max_spaces: String = util::char_count(' ', max_len + 2);
+        let mut result: Vec<ColoredString> = Vec::with_capacity(count * 6);
+        for (i, (property, value)) in properties.iter().enumerate() {
             result.push("    ".normal());
             result.push(property.color(color));
             result.push(":".color(color));
-            result.push(spaces.normal());
-            result.push(value.normal());
-            if i + 1 < len {
+            result.push(max_spaces[..(max_len - property.len() + 2)].normal());
+            result.push(value.as_str().normal());
+            if i + 1 < count {
                 result.push("\n".normal());
             }
         }
@@ -72,9 +72,15 @@ impl From<Properties> for Vec<ColoredString> {
     }
 }
 
+impl From<Properties> for Vec<ColoredString> {
+    fn from(props: Properties) -> Vec<ColoredString> {
+        Vec::from(&props)
+    }
+}
+
 impl Display for Properties {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let strings: Vec<ColoredString> = Vec::from(self.clone());
+        let strings: Vec<ColoredString> = Vec::from(self);
         for string in &strings {
             write!(f, "{}", string)?;
         }

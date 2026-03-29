@@ -6,7 +6,7 @@
 
 This library aids in command-line error reporting.
 
-    clerr = "0.10.0"
+    clerr = "0.11.0-rc.1"
 
 ## Examples
 
@@ -81,14 +81,14 @@ error[E042]: invalid encoding
 
 Three severity levels are available, each with a distinct color:
 
-| Level     | Color  |
-|-----------|--------|
-| `Error`   | Red    |
-| `Warning` | Yellow |
-| `Info`    | Blue   |
+| Level     | Color        |
+|-----------|--------------|
+| `Error`   | BrightRed    |
+| `Warning` | BrightYellow |
+| `Info`    | BrightBlue   |
 
-These colors are intentionally fixed for consistency.
+These colors are intentionally fixed for consistency and consideration for the colorblind.
 
 ## Issues & Contributing
 
-See [ISSUES.md](ISSUES.md) for future work and [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+See [ISSUES.md](ISSUES.md) for issues & future work and [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
