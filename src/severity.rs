@@ -13,7 +13,7 @@ impl Severity {
     //! Display
 
     /// Gets the label string.
-    pub(crate) fn label(self) -> &'static str {
+    pub fn label(self) -> &'static str {
         match self {
             Self::Error => "error",
             Self::Warning => "warning",
@@ -22,7 +22,7 @@ impl Severity {
     }
 
     /// Gets the associated color.
-    pub(crate) fn color(self) -> Color {
+    pub fn color(self) -> Color {
         match self {
             Self::Error => Color::BrightRed,
             Self::Warning => Color::BrightYellow,

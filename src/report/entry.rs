@@ -3,10 +3,11 @@ use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
 
-/// A report entry that wraps `Vec<ColoredString>` and ignores color on comparison operations.
+/// A report entry that wraps [Vec<ColoredString>] and ignores color on comparison operations.
 #[derive(Clone, Debug)]
+#[repr(transparent)]
 pub struct Entry {
-    strings: Vec<ColoredString>,
+    pub strings: Vec<ColoredString>,
 }
 
 impl From<Vec<ColoredString>> for Entry {
@@ -18,15 +19,6 @@ impl From<Vec<ColoredString>> for Entry {
 impl From<Entry> for Vec<ColoredString> {
     fn from(entry: Entry) -> Self {
         entry.strings
-    }
-}
-
-impl Entry {
-    //! Properties
-
-    /// Gets the colored strings.
-    pub fn strings(&self) -> &[ColoredString] {
-        self.strings.as_slice()
     }
 }
 
@@ -47,8 +39,8 @@ impl Ord for Entry {
     fn cmp(&self, other: &Self) -> Ordering {
         self.strings
             .iter()
-            .map(|f| f.as_bytes())
-            .cmp(other.strings.iter().map(|f| f.as_bytes()))
+            .map(|fragment| fragment.as_bytes())
+            .cmp(other.strings.iter().map(|fragment| fragment.as_bytes()))
     }
 }
 

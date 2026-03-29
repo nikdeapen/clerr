@@ -20,9 +20,9 @@ pub struct TokenInfo<'a> {
     pub severity: Severity,
     /// The file name.
     pub file_name: &'a str,
-    /// The 1-based line number.
+    /// The 1-indexed line number.
     pub line: usize,
-    /// The 0-based column position within the line.
+    /// The 0-indexed column position within the line.
     pub position: usize,
     /// The text content of the line.
     pub line_text: &'a str,
@@ -36,17 +36,18 @@ impl<'a> From<TokenInfo<'a>> for Vec<ColoredString> {
     fn from(info: TokenInfo<'a>) -> Vec<ColoredString> {
         let line_number: String = info.line.to_string();
         let spaces: String = util::char_count(' ', line_number.len());
+        let ln_spaces: ColoredString = format!("\n{spaces}").normal();
         let color: Color = info.severity.color();
         let indent: String = util::char_count(' ', info.position);
         let carets: String = util::char_count('^', info.token_len);
 
         vec![
             // 1 - file name
-            spaces.clone().normal(),
+            spaces.as_str().normal(),
             "-->".bright_blue(),
             util::file_and_token(info.file_name, info.line, info.position).normal(),
             // 2 - empty
-            format!("\n{spaces}").normal(),
+            ln_spaces.clone(),
             " | ".bright_blue(),
             // 3 - line text
             "\n".normal(),
@@ -54,14 +55,14 @@ impl<'a> From<TokenInfo<'a>> for Vec<ColoredString> {
             " | ".bright_blue(),
             info.line_text.normal(),
             // 4 - error message
-            format!("\n{spaces}").normal(),
+            ln_spaces.clone(),
             " | ".bright_blue(),
             indent.normal(),
             carets.color(color),
             " --- ".color(color),
             info.message.color(color),
             // 5 - empty
-            format!("\n{spaces}").normal(),
+            ln_spaces,
             " | ".bright_blue(),
         ]
     }
