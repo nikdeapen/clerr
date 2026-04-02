@@ -52,6 +52,7 @@ impl PartialOrd for Entry {
 
 impl Hash for Entry {
     fn hash<H: Hasher>(&self, state: &mut H) {
+        self.strings.len().hash(state);
         for fragment in &self.strings {
             fragment.as_bytes().hash(state);
         }
