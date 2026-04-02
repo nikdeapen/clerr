@@ -1,9 +1,7 @@
 [package]
 name = "clerr"
-version = "0.11.0-rc.1"
+version = "0.11.0-rc.2"
 description = "This library aids in command-line error reporting."
-keywords = ["cli", "error", "report", "log", "terminal"]
-categories = ["command-line-interface", "development-tools::debugging"]
 readme = "README.md"
 repository = "https://github.com/nikdeapen/clerr"
 homepage = "https://github.com/nikdeapen/clerr"
@@ -13,3 +11,4 @@ license = "MIT"
 
 [dependencies]
 colored = "3"
+unicode-width = "0.2"

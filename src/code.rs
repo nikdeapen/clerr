@@ -98,10 +98,24 @@ impl Display for Code {
 #[cfg(test)]
 mod tests {
     use crate::Code;
+    use colored::Colorize;
 
     #[test]
     fn display() {
-        let code: Code = Code::error("12345", "the error message");
-        println!("code:\n{}\n", code);
+        let code: Code = Code::error("E123", "the error message");
+
+        let result: String = code.to_string();
+        let expected: String = [
+            "error".bright_red(),
+            "[".bright_red(),
+            "E123".bright_red(),
+            "]: ".bright_red(),
+            "the error message".bright_white().bold(),
+        ]
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
+
+        assert_eq!(result, expected);
     }
 }

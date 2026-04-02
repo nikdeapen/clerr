@@ -6,9 +6,11 @@
 
 This library aids in command-line error reporting.
 
-    clerr = "0.11.0-rc.1"
+    clerr = "0.11.0-rc.2"
 
 ## Examples
+
+Note: The output for each example would be colored text. This is not supported in Markdown files.
 
 ### Simple Report
 
@@ -36,7 +38,7 @@ let info: TokenInfo = TokenInfo {
     severity: Severity::Warning,
     file_name: "src/main.rs",
     line: 8,
-    position: 8,
+    position: 9,
     line_text: "    let x = 42;",
     token_len: 1,
     message: "consider prefixing with `_`",

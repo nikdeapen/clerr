@@ -2,6 +2,7 @@ use crate::Severity::Info;
 use crate::report::util;
 use colored::{Color, ColoredString, Colorize};
 use std::fmt::{Display, Formatter};
+use unicode_width::UnicodeWidthStr;
 
 /// A properties entry.
 ///
@@ -49,20 +50,21 @@ impl Properties {
 impl From<&Properties> for Vec<ColoredString> {
     fn from(properties: &Properties) -> Vec<ColoredString> {
         let properties: &[(String, String)] = properties.properties.as_slice();
-        let max_len: usize = properties
+        let max_width: usize = properties
             .iter()
-            .map(|(name, _)| name.len())
+            .map(|(name, _)| name.width())
             .max()
             .unwrap_or(0);
         let count: usize = properties.len();
         let color: Color = Info.color();
-        let max_spaces: String = util::char_count(' ', max_len + 2);
+        let max_spaces: String = util::char_count(' ', max_width + 2);
         let mut result: Vec<ColoredString> = Vec::with_capacity(count * 6);
         for (i, (property, value)) in properties.iter().enumerate() {
+            let padding: usize = max_width - property.width() + 2;
             result.push("    ".normal());
             result.push(property.color(color));
             result.push(":".color(color));
-            result.push(max_spaces[..(max_len - property.len() + 2)].normal());
+            result.push(max_spaces[..padding].normal());
             result.push(value.as_str().normal());
             if i + 1 < count {
                 result.push("\n".normal());
@@ -90,16 +92,67 @@ impl Display for Properties {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Code, Properties, Report};
+    use crate::Properties;
+    use colored::Colorize;
 
     #[test]
-    fn properties() {
+    fn display() {
         let properties: Properties = Properties::default()
             .with_property("one", "two")
             .with_property("three", "four")
             .with_property("five", "six");
-        let code: Code = Code::error("an-error-code", "an error message");
-        let report: Report = Report::from(code).with_entry(properties);
-        println!("properties:\n{}\n", report);
+
+        let result: String = properties.to_string();
+        let expected: String = [
+            "    ".normal(),
+            "one".bright_blue(),
+            ":".bright_blue(),
+            "    ".normal(),
+            "two".normal(),
+            "\n".normal(),
+            "    ".normal(),
+            "three".bright_blue(),
+            ":".bright_blue(),
+            "  ".normal(),
+            "four".normal(),
+            "\n".normal(),
+            "    ".normal(),
+            "five".bright_blue(),
+            ":".bright_blue(),
+            "   ".normal(),
+            "six".normal(),
+        ]
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
+
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn display_unicode() {
+        let properties: Properties = Properties::default()
+            .with_property("one", "two")
+            .with_property("你好", "hello");
+
+        let result: String = properties.to_string();
+        let expected: String = [
+            "    ".normal(),
+            "one".bright_blue(),
+            ":".bright_blue(),
+            "   ".normal(),
+            "two".normal(),
+            "\n".normal(),
+            "    ".normal(),
+            "你好".bright_blue(),
+            ":".bright_blue(),
+            "  ".normal(),
+            "hello".normal(),
+        ]
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
+
+        assert_eq!(result, expected);
     }
 }
