@@ -38,7 +38,10 @@ impl<'a> From<TokenInfo<'a>> for Vec<ColoredString> {
         let char_count: usize = info.line_text.chars().count();
         debug_assert!(info.line >= 1, "line must be 1-indexed");
         debug_assert!(info.position >= 1, "position must be 1-indexed");
-        debug_assert!(info.position - 1 + info.token_len <= char_count, "token exceeds line_text");
+        debug_assert!(
+            info.position - 1 + info.token_len <= char_count,
+            "token exceeds line_text"
+        );
 
         let line_number: String = info.line.to_string();
         let spaces: String = util::char_count(' ', line_number.len());
