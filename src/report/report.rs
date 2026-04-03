@@ -73,6 +73,8 @@ impl Display for Report {
     }
 }
 
+impl std::error::Error for Report {}
+
 #[cfg(test)]
 mod tests {
     use crate::{Code, Report};
