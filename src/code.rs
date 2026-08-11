@@ -10,7 +10,8 @@ use std::fmt::{Display, Formatter};
 /// ```text
 /// severity[id]: message
 /// ```
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+#[must_use]
+#[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug)]
 pub struct Code {
     severity: Severity,
     id: String,
@@ -70,11 +71,13 @@ impl Code {
     }
 
     /// Gets the identifier.
+    #[must_use]
     pub fn id(&self) -> &str {
         self.id.as_str()
     }
 
     /// Gets the message.
+    #[must_use]
     pub fn message(&self) -> &str {
         self.message.as_str()
     }

@@ -29,6 +29,9 @@
 //! ```
 
 #![allow(clippy::module_inception)]
+#![warn(clippy::must_use_candidate)]
+
+pub use colored;
 
 pub use code::*;
 pub use report::*;

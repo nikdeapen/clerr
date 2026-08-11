@@ -13,7 +13,8 @@ use unicode_width::UnicodeWidthStr;
 ///     expected:  utf-8
 ///     found:     binary
 /// ```
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+#[must_use]
+#[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug, Default)]
 pub struct Properties {
     properties: Vec<(String, String)>,
 }
@@ -22,6 +23,7 @@ impl Properties {
     //! Properties
 
     /// Gets the properties.
+    #[must_use]
     pub fn properties(&self) -> &[(String, String)] {
         self.properties.as_slice()
     }
@@ -36,7 +38,6 @@ impl Properties {
     }
 
     /// Adds the property.
-    #[must_use]
     pub fn with_property<S0, S1>(mut self, name: S0, value: S1) -> Self
     where
         S0: Into<String>,

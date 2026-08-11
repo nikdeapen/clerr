@@ -15,7 +15,8 @@ use unicode_width::UnicodeWidthStr;
 ///   |     ^^^^ --- the message text
 ///   |
 /// ```
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+#[must_use]
+#[derive(Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug)]
 pub struct TokenInfo<'a> {
     /// The severity used for the underline and message color.
     pub severity: Severity,
