@@ -5,7 +5,6 @@ use std::hash::{Hash, Hasher};
 
 /// A report entry that wraps [Vec<ColoredString>] and ignores color on comparison operations.
 #[derive(Clone, Debug)]
-#[repr(transparent)]
 pub struct Entry {
     pub strings: Vec<ColoredString>,
 }

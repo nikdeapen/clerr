@@ -1,34 +1,6 @@
-//! This library aids in command-line error reporting.
-//!
-//! # Example
-//!
-//! ```
-//! use clerr::*;
-//!
-//! let code: Code = Code::warning("W012", "unused variable");
-//! let info: TokenInfo = TokenInfo {
-//!     severity: Severity::Warning,
-//!     file_name: "src/main.rs",
-//!     line: 8,
-//!     position: 9,
-//!     line_text: "    let x = 42;",
-//!     token_len: 1,
-//!     message: "consider prefixing with `_`",
-//! };
-//! let report: Report = Report::from(code).with_entry(info);
-//! eprintln!("{}", report);
-//! ```
-//!
-//! ```text
-//! warning[W012]: unused variable
-//!  --> src/main.rs [line=8, position=9]
-//!   |
-//! 8 |     let x = 42;
-//!   |         ^ --- consider prefixing with `_`
-//!   |
-//! ```
+#![doc = include_str!("../README.md")]
 
-#![allow(clippy::module_inception)]
+pub use colored;
 
 pub use code::*;
 pub use report::*;

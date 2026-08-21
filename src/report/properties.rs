@@ -4,7 +4,7 @@ use colored::{Color, ColoredString, Colorize};
 use std::fmt::{Display, Formatter};
 use unicode_width::UnicodeWidthStr;
 
-/// A properties entry.
+/// An entry with key-value pairs.
 ///
 /// # Display
 ///
@@ -13,7 +13,8 @@ use unicode_width::UnicodeWidthStr;
 ///     expected:  utf-8
 ///     found:     binary
 /// ```
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+#[must_use]
+#[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug, Default)]
 pub struct Properties {
     properties: Vec<(String, String)>,
 }
@@ -22,6 +23,7 @@ impl Properties {
     //! Properties
 
     /// Gets the properties.
+    #[must_use]
     pub fn properties(&self) -> &[(String, String)] {
         self.properties.as_slice()
     }
@@ -36,7 +38,6 @@ impl Properties {
     }
 
     /// Adds the property.
-    #[must_use]
     pub fn with_property<S0, S1>(mut self, name: S0, value: S1) -> Self
     where
         S0: Into<String>,
@@ -101,7 +102,6 @@ mod tests {
             .with_property("one", "two")
             .with_property("three", "four")
             .with_property("five", "six");
-
         let result: String = properties.to_string();
         let expected: String = [
             "    ".normal(),
@@ -125,7 +125,6 @@ mod tests {
         .iter()
         .map(|s| s.to_string())
         .collect();
-
         assert_eq!(result, expected);
     }
 
@@ -134,7 +133,6 @@ mod tests {
         let properties: Properties = Properties::default()
             .with_property("one", "two")
             .with_property("你好", "hello");
-
         let result: String = properties.to_string();
         let expected: String = [
             "    ".normal(),
@@ -152,7 +150,6 @@ mod tests {
         .iter()
         .map(|s| s.to_string())
         .collect();
-
         assert_eq!(result, expected);
     }
 }

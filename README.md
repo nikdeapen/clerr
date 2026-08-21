@@ -6,7 +6,9 @@
 
 This library aids in command-line error reporting.
 
-    clerr = "0.11.0-rc.3"
+```toml
+clerr = "0.11.0"
+```
 
 ## Examples
 
@@ -14,7 +16,7 @@ Note: The output for each example would be colored text. This is not supported i
 
 ### Simple Report
 
-```rust,ignore
+```rust
 use clerr::*;
 
 let code: Code = Code::error("E001", "file not found");
@@ -30,7 +32,7 @@ error[E001]: file not found
 
 Highlight a specific token in a source line with a message, similar to `rustc` output.
 
-```rust,ignore
+```rust
 use clerr::*;
 
 let code: Code = Code::warning("W012", "unused variable");
@@ -60,7 +62,7 @@ warning[W012]: unused variable
 
 Display aligned key-value pairs under a report.
 
-```rust,ignore
+```rust
 use clerr::*;
 
 let props: Properties = Properties::default()
@@ -93,4 +95,5 @@ These colors are intentionally fixed for consistency and consideration for the c
 
 ## Issues & Contributing
 
-See [ISSUES.md](ISSUES.md) for issues & future work and [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+See [ISSUES.md](https://github.com/nikdeapen/clerr/blob/master/ISSUES.md) for issues & future work and
+[CONTRIBUTING.md](https://github.com/nikdeapen/clerr/blob/master/CONTRIBUTING.md) for guidelines.

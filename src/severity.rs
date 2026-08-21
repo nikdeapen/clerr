@@ -2,10 +2,14 @@ use colored::{Color, Colorize};
 use std::fmt::{Display, Formatter};
 
 /// The severity of a command-line report.
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+#[must_use]
+#[derive(Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug)]
 pub enum Severity {
+    /// An error.
     Error,
+    /// A warning.
     Warning,
+    /// Information.
     Info,
 }
 
@@ -13,6 +17,7 @@ impl Severity {
     //! Display
 
     /// Gets the label string.
+    #[must_use]
     pub fn label(self) -> &'static str {
         match self {
             Self::Error => "error",
@@ -22,6 +27,7 @@ impl Severity {
     }
 
     /// Gets the associated color.
+    #[must_use]
     pub fn color(self) -> Color {
         match self {
             Self::Error => Color::BrightRed,
@@ -49,11 +55,9 @@ mod tests {
             (Severity::Warning, "warning", Color::BrightYellow),
             (Severity::Info, "info", Color::BrightBlue),
         ];
-
         for (severity, expected_label, expected_color) in test_cases {
             let result: String = severity.to_string();
             let expected: String = expected_label.color(*expected_color).to_string();
-
             assert_eq!(result, expected);
         }
     }

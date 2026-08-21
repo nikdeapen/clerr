@@ -11,7 +11,8 @@ use std::fmt::{Display, Formatter};
 /// severity[id]: message
 /// entries
 /// ```
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+#[must_use]
+#[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug)]
 pub struct Report {
     code: Code,
     entries: Vec<Entry>,
@@ -35,8 +36,9 @@ impl Report {
     }
 
     /// Gets the entries.
-    pub fn entries(&self) -> &[Vec<ColoredString>] {
-        unsafe { std::mem::transmute(self.entries.as_slice()) }
+    #[must_use]
+    pub fn entries(&self) -> impl ExactSizeIterator<Item = &[ColoredString]> {
+        self.entries.iter().map(|entry| entry.strings.as_slice())
     }
 }
 
@@ -52,7 +54,6 @@ impl Report {
     }
 
     /// Adds the `entry`.
-    #[must_use]
     pub fn with_entry<E>(mut self, entry: E) -> Self
     where
         E: Into<Vec<ColoredString>>,

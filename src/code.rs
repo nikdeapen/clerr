@@ -10,7 +10,8 @@ use std::fmt::{Display, Formatter};
 /// ```text
 /// severity[id]: message
 /// ```
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+#[must_use]
+#[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug)]
 pub struct Code {
     severity: Severity,
     id: String,
@@ -70,11 +71,13 @@ impl Code {
     }
 
     /// Gets the identifier.
+    #[must_use]
     pub fn id(&self) -> &str {
         self.id.as_str()
     }
 
     /// Gets the message.
+    #[must_use]
     pub fn message(&self) -> &str {
         self.message.as_str()
     }
@@ -103,7 +106,6 @@ mod tests {
     #[test]
     fn display() {
         let code: Code = Code::error("E123", "the error message");
-
         let result: String = code.to_string();
         let expected: String = [
             "error".bright_red(),
@@ -115,7 +117,6 @@ mod tests {
         .iter()
         .map(|s| s.to_string())
         .collect();
-
         assert_eq!(result, expected);
     }
 }
