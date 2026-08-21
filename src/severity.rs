@@ -5,8 +5,11 @@ use std::fmt::{Display, Formatter};
 #[must_use]
 #[derive(Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug)]
 pub enum Severity {
+    /// An error.
     Error,
+    /// A warning.
     Warning,
+    /// Information.
     Info,
 }
 
@@ -52,11 +55,9 @@ mod tests {
             (Severity::Warning, "warning", Color::BrightYellow),
             (Severity::Info, "info", Color::BrightBlue),
         ];
-
         for (severity, expected_label, expected_color) in test_cases {
             let result: String = severity.to_string();
             let expected: String = expected_label.color(*expected_color).to_string();
-
             assert_eq!(result, expected);
         }
     }

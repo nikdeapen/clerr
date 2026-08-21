@@ -1,6 +1,6 @@
 [package]
 name = "clerr"
-version = "0.11.0-rc.3"
+version = "0.11.0"
 description = "This library aids in command-line error reporting."
 readme = "README.md"
 repository = "https://github.com/nikdeapen/clerr"
@@ -12,3 +12,11 @@ license = "MIT"
 [dependencies]
 colored = "3"
 unicode-width = "0.2"
+
+[lints.rust]
+missing_debug_implementations = "warn"
+missing_docs = "warn"
+
+[lints.clippy]
+module_inception = "allow"
+must_use_candidate = "warn"

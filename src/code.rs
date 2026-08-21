@@ -106,7 +106,6 @@ mod tests {
     #[test]
     fn display() {
         let code: Code = Code::error("E123", "the error message");
-
         let result: String = code.to_string();
         let expected: String = [
             "error".bright_red(),
@@ -118,7 +117,6 @@ mod tests {
         .iter()
         .map(|s| s.to_string())
         .collect();
-
         assert_eq!(result, expected);
     }
 }

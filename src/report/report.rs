@@ -37,8 +37,8 @@ impl Report {
 
     /// Gets the entries.
     #[must_use]
-    pub fn entries(&self) -> &[Vec<ColoredString>] {
-        unsafe { &*(self.entries.as_slice() as *const [Entry] as *const [Vec<ColoredString>]) }
+    pub fn entries(&self) -> impl ExactSizeIterator<Item = &[ColoredString]> {
+        self.entries.iter().map(|entry| entry.strings.as_slice())
     }
 }
 

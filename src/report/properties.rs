@@ -4,7 +4,7 @@ use colored::{Color, ColoredString, Colorize};
 use std::fmt::{Display, Formatter};
 use unicode_width::UnicodeWidthStr;
 
-/// A properties entry.
+/// An entry with key-value pairs.
 ///
 /// # Display
 ///
@@ -102,7 +102,6 @@ mod tests {
             .with_property("one", "two")
             .with_property("three", "four")
             .with_property("five", "six");
-
         let result: String = properties.to_string();
         let expected: String = [
             "    ".normal(),
@@ -126,7 +125,6 @@ mod tests {
         .iter()
         .map(|s| s.to_string())
         .collect();
-
         assert_eq!(result, expected);
     }
 
@@ -135,7 +133,6 @@ mod tests {
         let properties: Properties = Properties::default()
             .with_property("one", "two")
             .with_property("你好", "hello");
-
         let result: String = properties.to_string();
         let expected: String = [
             "    ".normal(),
@@ -153,7 +150,6 @@ mod tests {
         .iter()
         .map(|s| s.to_string())
         .collect();
-
         assert_eq!(result, expected);
     }
 }
