@@ -7,7 +7,7 @@
 This library aids in command-line error reporting.
 
 ```toml
-clerr = "0.11.0"
+clerr = "0.11.1"
 ```
 
 ## Examples
