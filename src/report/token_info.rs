@@ -2,6 +2,7 @@ use crate::Severity;
 use crate::report::util;
 use colored::{Color, ColoredString, Colorize};
 use std::fmt::{Display, Formatter};
+use std::ops::Range;
 use unicode_width::UnicodeWidthStr;
 
 /// A token info entry.
@@ -32,6 +33,44 @@ pub struct TokenInfo<'a> {
     pub token_len: usize,
     /// The message displayed under the token.
     pub message: &'a str,
+}
+
+impl<'a> TokenInfo<'a> {
+    //! Construction
+
+    /// Creates a new token info for the token at the byte `range` of the `source`.
+    ///
+    /// The line, position, line text & token length are computed from the `source`. The line text
+    /// excludes the line ending, and a token that spans multiple lines is cut off at the end of
+    /// its first line.
+    ///
+    /// # Panics
+    /// Panics if the `range` is out of bounds or not on char boundaries of the `source`.
+    pub fn from_source(
+        severity: Severity,
+        file_name: &'a str,
+        source: &'a str,
+        range: Range<usize>,
+        message: &'a str,
+    ) -> Self {
+        let before: &str = &source[..range.start];
+        let line_start: usize = before.rfind('\n').map_or(0, |i| i + 1);
+        let line_text: &str = source[line_start..].lines().next().unwrap_or("");
+        let position: usize = before[line_start..].chars().count();
+        let token_len: usize = source[range]
+            .chars()
+            .count()
+            .min(line_text.chars().count().saturating_sub(position));
+        Self {
+            severity,
+            file_name,
+            line: before.matches('\n').count() + 1,
+            position: position + 1,
+            line_text,
+            token_len,
+            message,
+        }
+    }
 }
 
 impl<'a> From<TokenInfo<'a>> for Vec<ColoredString> {
@@ -98,9 +137,47 @@ impl<'a> Display for TokenInfo<'a> {
 
 #[cfg(test)]
 mod tests {
-    use crate::Severity::Warning;
+    use crate::Severity::{Error, Warning};
     use crate::TokenInfo;
     use colored::Colorize;
+
+    fn from_source(source: &str, start: usize, end: usize) -> (usize, usize, &str, usize) {
+        let info: TokenInfo = TokenInfo::from_source(Error, "f", source, start..end, "m");
+        (info.line, info.position, info.line_text, info.token_len)
+    }
+
+    #[test]
+    fn from_source_first_line() {
+        assert_eq!(from_source("let x = 42;", 4, 5), (1, 5, "let x = 42;", 1));
+    }
+
+    #[test]
+    fn from_source_later_line() {
+        assert_eq!(from_source("a\nbc\n  def\n", 7, 10), (3, 3, "  def", 3));
+    }
+
+    #[test]
+    fn from_source_crlf() {
+        assert_eq!(from_source("a\r\nbc\r\n", 3, 5), (2, 1, "bc", 2));
+    }
+
+    #[test]
+    fn from_source_counts_chars() {
+        assert_eq!(
+            from_source("// 你好\nstruct 你 {}", 17, 20),
+            (2, 8, "struct 你 {}", 1)
+        );
+    }
+
+    #[test]
+    fn from_source_end_of_input() {
+        assert_eq!(from_source("a {\n", 4, 4), (2, 1, "", 0));
+    }
+
+    #[test]
+    fn from_source_cuts_multi_line_token() {
+        assert_eq!(from_source("x // note\ny", 2, 10), (1, 3, "x // note", 7));
+    }
 
     #[test]
     fn display() {
