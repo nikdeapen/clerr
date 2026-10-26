@@ -31,12 +31,12 @@ impl Report {
     //! Properties
 
     /// Gets the code.
+    #[must_use]
     pub fn code(&self) -> &Code {
         &self.code
     }
 
     /// Gets the entries.
-    #[must_use]
     pub fn entries(&self) -> impl ExactSizeIterator<Item = &[ColoredString]> {
         self.entries.iter().map(|entry| entry.strings.as_slice())
     }
