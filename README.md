@@ -58,6 +58,22 @@ warning[W012]: unused variable
   |
 ```
 
+The line, position, line text, and token length can also be computed from the source text and the token's byte range.
+
+```rust
+use clerr::*;
+
+let source: &str = "fn main() {\n    let x = 42;\n}";
+let info: TokenInfo = TokenInfo::from_source(
+    Severity::Warning,
+    "src/main.rs",
+    source,
+    20..21,
+    "consider prefixing with `_`",
+);
+assert_eq!((info.line, info.position, info.line_text), (2, 9, "    let x = 42;"));
+```
+
 ### Properties
 
 Display aligned key-value pairs under a report.
