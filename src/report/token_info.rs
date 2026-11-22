@@ -10,12 +10,14 @@ use unicode_width::UnicodeWidthStr;
 /// # Display
 ///
 /// ```text
-///  --> the/file/name.ext [line=8, position=5]
+///  --> the/file/name.ext:8:5
 ///   |
 /// 8 | the line text
 ///   |     ^^^^ --- the message text
 ///   |
 /// ```
+///
+/// An empty message shows only the carets.
 #[must_use]
 #[derive(Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Debug)]
 pub struct TokenInfo<'a> {
@@ -31,7 +33,7 @@ pub struct TokenInfo<'a> {
     pub line_text: &'a str,
     /// The length of the token in characters. A value of 0 produces no carets.
     pub token_len: usize,
-    /// The message displayed under the token.
+    /// The message displayed under the token. An empty message shows only the carets.
     pub message: &'a str,
 }
 
@@ -98,7 +100,7 @@ impl<'a> From<TokenInfo<'a>> for Vec<ColoredString> {
             .collect();
         let carets: String = util::char_count('^', token.width());
 
-        vec![
+        let mut strings: Vec<ColoredString> = vec![
             // 1 - file name
             spaces.as_str().normal(),
             "-->".bright_blue(),
@@ -116,12 +118,15 @@ impl<'a> From<TokenInfo<'a>> for Vec<ColoredString> {
             " | ".bright_blue(),
             indent.normal(),
             carets.color(color),
-            " --- ".color(color),
-            info.message.color(color),
-            // 5 - empty
-            ln_spaces,
-            " | ".bright_blue(),
-        ]
+        ];
+        if !info.message.is_empty() {
+            strings.push(" --- ".color(color));
+            strings.push(info.message.color(color));
+        }
+        // 5 - empty
+        strings.push(ln_spaces);
+        strings.push(" | ".bright_blue());
+        strings
     }
 }
 
@@ -195,7 +200,7 @@ mod tests {
         let expected: String = [
             "  ".normal(),
             "-->".bright_blue(),
-            " the/file/name.ext [line=12, position=5]".normal(),
+            " the/file/name.ext:12:5".normal(),
             "\n  ".normal(),
             " | ".bright_blue(),
             "\n".normal(),
@@ -209,6 +214,43 @@ mod tests {
             " --- ".bright_yellow(),
             "the 'line' token".bright_yellow(),
             "\n  ".normal(),
+            " | ".bright_blue(),
+        ]
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
+
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn display_without_message() {
+        let info: TokenInfo = TokenInfo {
+            severity: Error,
+            file_name: "f",
+            line: 1,
+            position: 3,
+            line_text: "a bc",
+            token_len: 2,
+            message: "",
+        };
+
+        let result: String = info.to_string();
+        let expected: String = [
+            " ".normal(),
+            "-->".bright_blue(),
+            " f:1:3".normal(),
+            "\n ".normal(),
+            " | ".bright_blue(),
+            "\n".normal(),
+            "1".bright_blue(),
+            " | ".bright_blue(),
+            "a bc".normal(),
+            "\n ".normal(),
+            " | ".bright_blue(),
+            "  ".normal(),
+            "^^".bright_red(),
+            "\n ".normal(),
             " | ".bright_blue(),
         ]
         .iter()
