@@ -51,7 +51,7 @@ eprintln!("{}", report);
 
 ```text
 warning[W012]: unused variable
- --> src/main.rs [line=8, position=9]
+ --> src/main.rs:8:9
   |
 8 |     let x = 42;
   |         ^ --- consider prefixing with `_`
